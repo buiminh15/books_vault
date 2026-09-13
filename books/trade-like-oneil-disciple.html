@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tóm Tắt Chiến Lược: Cách Kiếm Lợi Nhuận 18.000% — Gil Morales & Chris Kacher</title>
+  <style>
+    /* ==========================================================================
+       CSS VARIABLES & THEMES (DARK & LIGHT)
+       ========================================================================== */
+    :root {
+      --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+      
+      /* Dark Theme (Mặc định) */
+      --bg-body: #0b1120;
+      --bg-card: #151f32;
+      --bg-card-sub: #1e293b;
+      --bg-glass: rgba(21, 31, 50, 0.9);
+      --border-color: #27354f;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-soft: #cbd5e1;
+
+      /* Phân loại màu Accent */
+      --accent-gold: #f59e0b;
+      --accent-gold-bg: rgba(245, 158, 11, 0.08);
+      --accent-gold-border: rgba(245, 158, 11, 0.35);
+
+      --accent-green: #10b981;
+      --accent-green-bg: rgba(16, 185, 129, 0.08);
+      --accent-green-border: rgba(16, 185, 129, 0.35);
+
+      --accent-red: #ef4444;
+      --accent-red-bg: rgba(239, 68, 68, 0.08);
+      --accent-red-border: rgba(239, 68, 68, 0.35);
+
+      --accent-blue: #3b82f6;
+      --accent-blue-bg: rgba(59, 130, 246, 0.08);
+      --accent-blue-border: rgba(59, 130, 246, 0.35);
+
+      --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.25);
+      --shadow-md: 0 12px 28px rgba(0, 0, 0, 0.35);
+      --radius: 12px;
+      --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-body: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-card-sub: #f1f5f9;
+      --bg-glass: rgba(255, 255, 255, 0.92);
+      --border-color: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-soft: #334155;
+
+      --accent-gold-bg: #fffbeb;
+      --accent-gold-border: #fcd34d;
+
+      --accent-green-bg: #ecfdf5;
+      --accent-green-border: #6ee7b7;
+
+      --accent-red-bg: #fef2f2;
+      --accent-red-border: #fca5a5;
+
+      --accent-blue-bg: #eff6ff;
+      --accent-blue-border: #93c5fd;
+
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 10px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    /* ==========================================================================
+       RESET & BASE STYLES
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      line-height: 1.75;
+      font-size: 16px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Reading Progress Bar */
+    #progress-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: transparent;
+      z-index: 1000;
+    }
+
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-gold), var(--accent-green), var(--accent-blue));
+      transition: width 0.1s ease-out;
+    }
+
+    /* Top Sticky Utility Bar */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 900;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: var(--bg-glass);
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: var(--transition);
+    }
+
+    .brand-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .controls-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .task-counter-badge {
+      font-size: 0.82rem;
+      font-weight: 600;
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-color);
+      padding: 4px 14px;
+      border-radius: 999px;
+      color: var(--accent-green);
+      white-space: nowrap;
+    }
+
+    .theme-toggle-btn {
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition);
+    }
+
+    .theme-toggle-btn:hover {
+      border-color: var(--accent-gold);
+      transform: translateY(-1px);
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 36px 20px 80px;
+    }
+
+    /* ==========================================================================
+       HERO BOOK HEADER
+       ========================================================================== */
+    .hero-book {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.98) 100%);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 40px 32px;
+      margin-bottom: 44px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+
+    [data-theme="light"] .hero-book {
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    }
+
+    .hero-book::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent-gold), var(--accent-blue));
+    }
+
+    .book-tag {
+      display: inline-block;
+      padding: 4px 14px;
+      background: var(--accent-gold-bg);
+      border: 1px solid var(--accent-gold-border);
+      color: var(--accent-gold);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+
+    .hero-book h1 {
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      line-height: 1.25;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    .hero-book .author {
+      font-size: 1.1rem;
+      color: var(--accent-blue);
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+      padding: 18px 0;
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .meta-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      margin-bottom: 3px;
+    }
+
+    .meta-val {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-soft);
+    }
+
+    .context-box {
+      margin-top: 18px;
+      font-size: 0.95rem;
+      color: var(--text-soft);
+      line-height: 1.7;
+    }
+
+    .pillar-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .pillar-pill {
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-color);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--accent-gold);
+    }
+
+    .one-liner {
+      background: var(--accent-gold-bg);
+      border-left: 4px solid var(--accent-gold);
+      padding: 16px 20px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-style: italic;
+      color: var(--text-main);
+      font-size: 1.05rem;
+      margin-top: 18px;
+    }
+
+    /* ==========================================================================
+       SECTION / PILLAR MODULES
+       ========================================================================== */
+    .pillar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 34px 28px;
+      margin-bottom: 44px;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+
+    .pillar-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .pillar-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .pillar-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-gold), #d97706);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 800;
+      flex-shrink: 0;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
+    }
+
+    .pillar-title-wrap h2 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--text-main);
+    }
+
+    .pillar-title-wrap .sub {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ==========================================================================
+       SPECIALIZED BLOCKS
+       ========================================================================== */
+    
+    /* 1. Core Concept (Gold) */
+    .box-takeaway {
+      background: var(--accent-gold-bg);
+      border: 1px solid var(--accent-gold-border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin-bottom: 22px;
+    }
+
+    .box-takeaway h3 {
+      color: var(--accent-gold);
+      font-size: 1.08rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .box-takeaway p {
+      color: var(--text-soft);
+      font-size: 0.98rem;
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+
+    .box-takeaway p:last-child {
+      margin-bottom: 0;
+    }
+
+    .box-takeaway ul, .box-takeaway ol {
+      margin-left: 22px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+      color: var(--text-soft);
+    }
+
+    .box-takeaway li {
+      margin-bottom: 6px;
+    }
+
+    /* 2. Action Steps (Green Checklist) */
+    .box-action {
+      background: var(--accent-green-bg);
+      border: 1px solid var(--accent-green-border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin-bottom: 22px;
+    }
+
+    .box-action h3 {
+      color: var(--accent-green);
+      font-size: 1.08rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .action-checklist {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .action-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .action-item input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--accent-green);
+      border-radius: 6px;
+      outline: none;
+      background: var(--bg-card);
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+      margin-top: 3px;
+      transition: var(--transition);
+    }
+
+    .action-item input[type="checkbox"]:checked {
+      background: var(--accent-green);
+    }
+
+    .action-item input[type="checkbox"]:checked::after {
+      content: "✓";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .action-text {
+      color: var(--text-soft);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      transition: var(--transition);
+    }
+
+    .action-item input[type="checkbox"]:checked ~ .action-text {
+      text-decoration: line-through;
+      opacity: 0.55;
+    }
+
+    /* 3. Quote Card (Blue with thick left border) */
+    .box-quote {
+      background: var(--accent-blue-bg);
+      border: 1px solid var(--accent-blue-border);
+      border-left: 6px solid var(--accent-blue);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 18px 24px;
+      margin-bottom: 22px;
+    }
+
+    .box-quote p {
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--text-main);
+      line-height: 1.65;
+    }
+
+    .box-quote .quote-author {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-blue);
+      text-align: right;
+      margin-top: 8px;
+      font-style: normal;
+    }
+
+    /* 4. Pitfalls (Red) */
+    .box-pitfall {
+      background: var(--accent-red-bg);
+      border: 1px solid var(--accent-red-border);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      margin-bottom: 22px;
+    }
+
+    .box-pitfall h3 {
+      color: var(--accent-red);
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .box-pitfall p {
+      color: var(--text-soft);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
+
+    .box-pitfall p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ==========================================================================
+       ACCORDION: CASE STUDIES
+       ========================================================================== */
+    .accordion-wrap {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--bg-card-sub);
+      margin-top: 14px;
+    }
+
+    .accordion-header {
+      padding: 14px 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: transparent;
+      user-select: none;
+      transition: background 0.2s ease;
+    }
+
+    .accordion-header:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    [data-theme="light"] .accordion-header:hover {
+      background: rgba(0, 0, 0, 0.02);
+    }
+
+    .accordion-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .accordion-icon {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      transition: transform 0.3s ease;
+    }
+
+    .accordion-wrap.active .accordion-icon {
+      transform: rotate(180deg);
+      color: var(--accent-gold);
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0, 1, 0, 1);
+      padding: 0 20px;
+    }
+
+    .accordion-wrap.active .accordion-content {
+      max-height: 850px;
+      transition: max-height 0.4s ease-in-out;
+      padding: 18px 20px 22px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .accordion-content p {
+      font-size: 0.92rem;
+      color: var(--text-soft);
+      line-height: 1.68;
+      margin-bottom: 10px;
+    }
+
+    .accordion-content p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ==========================================================================
+       KEY TAKEAWAYS MATRIX (TABLES)
+       ========================================================================== */
+    .matrix-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 34px 28px;
+      margin-bottom: 44px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .matrix-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--accent-gold);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      margin-top: 16px;
+      margin-bottom: 24px;
+    }
+
+    table.matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      text-align: left;
+    }
+
+    table.matrix-table th, table.matrix-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    table.matrix-table th {
+      background: var(--bg-card-sub);
+      color: var(--accent-gold);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+
+    table.matrix-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    [data-theme="light"] table.matrix-table tr:hover td {
+      background: rgba(0, 0, 0, 0.02);
+    }
+
+    table.matrix-table td strong {
+      color: var(--text-main);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    @media (max-width: 640px) {
+      .pillar-header {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .top-bar {
+        padding: 10px 16px;
+      }
+      .pillar-card {
+        padding: 22px 16px;
+      }
+      .hero-book {
+        padding: 26px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Reading Progress Bar -->
+  <div id="progress-container">
+    <div id="progress-bar"></div>
+  </div>
+
+  <!-- Sticky Top Utility Bar -->
+  <header class="top-bar">
+    <div class="brand-title">
+      <span>📈</span>
+      <span>18,000% Strategy Playbook</span>
+    </div>
+    <div class="controls-group">
+      <div class="task-counter-badge" id="task-counter">
+        Đã hoàn thành: 0/12 bài tập
+      </div>
+      <button class="theme-toggle-btn" id="theme-toggle">
+        <span id="theme-icon">☀️</span>
+        <span id="theme-text">Chế độ sáng</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ==================== HERO SECTION: TỔNG QUAN CHIẾN LƯỢC ==================== -->
+    <section class="hero-book">
+      <span class="book-tag">Chiến Lược Tăng Trưởng Siêu Cổ Phiếu</span>
+      <h1>Cách Kiếm Lợi Nhuận 18.000% Từ Thị Trường Chứng Khoán</h1>
+      <div class="author">Tác giả: Gil Morales & Tiến sĩ Chris Kacher · Môn đệ xuất sắc của huyền thoại William J. O’Neil</div>
+      
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">Lĩnh vực cốt lõi</span>
+          <span class="meta-val">CANSLIM® Nâng cao, Pocket Pivot & Market Timing</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Thành tích kiểm chứng</span>
+          <span class="meta-val">+18,241.2% lợi nhuận thực tế (1997 - 2005)</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Triết lý thực thi</span>
+          <span class="meta-val">Mua sớm trong nền giá, Cắt lỗ 6-7%, Danh mục tập trung</span>
+        </div>
+      </div>
+
+      <div class="context-box">
+        <strong>Bối cảnh & Mục đích cốt lõi:</strong> Thị trường tài chính hiện đại có nhịp biến động nhanh và khốc liệt hơn bao giờ hết với sự can thiệp của các thuật toán giao dịch tần suất cao. Phương pháp CANSLIM® cổ điển của William O’Neil thường khiến trader mua tại điểm bứt phá (Breakout) bị dính các đợt "rũ bỏ" (shakeouts) trong thị trường đi ngang (choppy markets). Công trình của Morales và Kacher đại diện cho sự tiến hóa vượt bậc: phát kiến ra <strong>Pocket Pivot</strong> để giải ngân ngay bên trong nền giá, thiết lập tỷ lệ R:R tối ưu và bảo vệ nguồn vốn tâm lý tuyệt đối.
+      </div>
+
+      <div class="pillar-pills">
+        <span class="pillar-pill">🚀 Pocket Pivot (Mua trong nền)</span>
+        <span class="pillar-pill">✂️ Cắt lỗ tự động 6 - 7%</span>
+        <span class="pillar-pill">🎯 Danh mục tập trung 12 - 18 mã</span>
+        <span class="pillar-pill">⏳ Quy tắc nắm giữ 8 tuần</span>
+        <span class="pillar-pill">🧘 Tâm lý "Vùng thăng hoa"</span>
+      </div>
+
+      <div class="one-liner">
+        "Các siêu cổ phiếu không xuất hiện ngẫu nhiên; chúng là sự hội tụ giữa tăng trưởng cơ bản bùng nổ và hành động tích lũy kiến tạo của dòng tiền lớn. Đừng cố gắng dự đoán thị trường — hãy phản ứng với dữ liệu thực tế và dồn toàn bộ nguồn lực vào những 'chiếc đầm đỏ' dẫn dắt cuộc chơi."
+      </div>
+    </section>
+
+    <!-- ==================== CHỦ ĐỀ 1 ==================== -->
+    <article class="pillar-card" id="pillar-1">
+      <div class="pillar-header">
+        <div class="pillar-badge">1</div>
+        <div class="pillar-title-wrap">
+          <h2>Di Sản & Sự Tiến Hóa Của Triết Lý Đầu Tư O’Neil</h2>
+          <div class="sub">Phả hệ huyền thoại từ Livermore, Wyckoff, Darvas · Lượng hóa nền giá 6-7 tuần · Model Book & Phê phán sự lười biếng</div>
+        </div>
+      </div>
+
+      <div class="box-takeaway">
+        <h3>💡 Ý tưởng cốt lõi (Core Concept)</h3>
+        <p><strong>1. Phả hệ tư duy:</strong> Hệ thống O’Neil không phải một phát minh cô lập mà kế thừa tinh hoa từ các bậc thầy: Lý thuyết Hộp của Nicolas Darvas, Điểm Pivotal của Jesse Livermore, và Luật Cung - Cầu của Richard Wyckoff.</p>
+        <p><strong>2. Tiến hóa toán học về Thời gian & Biên độ:</strong> Trong khi Darvas chỉ quan tâm giá ở trong hộp mà không màng tới thời gian, O’Neil đã lượng hóa dữ liệu lịch sử để xác lập nguyên tắc sống còn: <em>Một nền giá kiến tạo lành mạnh cần tối thiểu 6 - 7 tuần để hấp thụ hết lượng cung từ nhịp tăng trước đó</em>. Sự thiếu hụt về mặt thời gian tích lũy chính là chiếc bẫy tử thần khiến các trader nôn nóng mua phải nền giá "non" hoặc quá mỏng.</p>
+        <p><strong>3. Bản chất con người không đổi $\rightarrow$ Mẫu hình lặp lại:</strong> Cuốn <em>Model Book 1998</em> chứng minh sự tương đồng kinh ngạc giữa các siêu cổ phiếu cách nhau hàng thập kỷ (như Syntex Corp năm 1956 và America Online - AOL năm 1998). Cả hai đều hình thành các mẫu hình Cốc-Tay Cầm lởm chởm trước khi bước vào đà tăng giá hàng trăm phần trăm.</p>
+        <p><strong>4. Đầm Đỏ vs Đầm Vàng:</strong> Sai lầm lớn nhất của số đông là tâm lý săn "món hời" — thích mua cổ phiếu giá rẻ, đang rơi sâu từ đỉnh (những chiếc đầm vàng ế ẩm). Nhà đầu tư chuyên nghiệp chỉ mua "đầm đỏ" — những cổ phiếu tăng trưởng đột phá đang thiết lập đỉnh cao mới.</p>
+      </div>
+
+      <div class="box-action">
+        <h3>✅ Hành động áp dụng ngay (Action Steps)</h3>
+        <ul class="action-checklist">
+          <li class="action-item">
+            <input type="checkbox" id="act-1-1" class="chk-task">
+            <label class="action-text" for="act-1-1">
+              <strong>Dùng đồ thị tuần (Weekly Chart) làm bộ lọc nền giá:</strong> Luôn kiểm tra cấu trúc nền giá trên nến tuần; kiên quyết loại bỏ những cổ phiếu chưa tích lũy đủ 6-7 tuần.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-1-2" class="chk-task">
+            <label class="action-text" for="act-1-2">
+              <strong>Lập Sổ tay Tiền lệ Lịch sử (Personal Model Book):</strong> Chụp ảnh màn hình các siêu cổ phiếu lớn trong quá khứ và phân tích điểm bứt phá để rèn luyện tiềm thức nhận diện mẫu hình.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-1-3" class="chk-task">
+            <label class="action-text" for="act-1-3">
+              <strong>Xóa bỏ thói quen mua "Cổ phiếu rẻ":</strong> Chỉ đưa vào tầm ngắm những mã có RS (Relative Strength) > 85 và đang neo quanh vùng đỉnh 52 tuần.
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="box-quote">
+        <p>“Đó không phải là hệ thống giao dịch CỦA TÔI, mà là của thị trường, vì nó dựa trên quy luật hoạt động thực tế và bản chất cung - cầu muôn đời của thị trường.”</p>
+        <div class="quote-author">— William J. O’Neil</div>
+      </div>
+
+      <div class="box-pitfall">
+        <h3>⚠️ Sai lầm & Cạm bẫy cần tránh (Pitfalls)</h3>
+        <p><strong>Tư duy lối tắt và hóng tin nội gián (Tips):</strong> 90% nhà đầu tư thất bại vì lười biếng không chịu làm bài tập về nhà (không soi biểu đồ hàng ngày, không đọc báo cáo tài chính). Giao dịch là nghề chuyên nghiệp ngang hàng y khoa và luật pháp; bước vào thị trường với tư duy xin "phím hàng" là con đường dẫn thẳng đến cháy tài khoản.</p>
+      </div>
+
+      <div class="accordion-wrap">
+        <div class="accordion-header">
+          <span class="accordion-title">📖 Ví dụ thực tế trong sách: Sự tương đồng kỳ lạ giữa Syntex Corp (1956) và AOL (1998)</span>
+          <span class="accordion-icon">▼</span>
+        </div>
+        <div class="accordion-content">
+          <p><strong>Syntex Corp (1956):</strong> Công ty dược phẩm đột phá với thuốc tránh thai đầu tiên. Cổ phiếu hình thành nền giá Cốc-Tay cầm lởm chởm kéo dài nhiều tuần và bùng nổ vượt đỉnh khi doanh số tăng tốc, sau đó tăng hàng trăm phần trăm.</p>
+          <p><strong>America Online (AOL - 1998):</strong> 42 năm sau, AOL xuất hiện trong kỷ nguyên bùng nổ Internet. Bất chấp thị trường biến động, cấu trúc giá - khối lượng của AOL lặp lại chính xác dấu chân của Syntex Corp: thu hẹp biên độ biến động trong nền giá tuần, bứt phá với volume tổ chức khổng lồ và đem lại mức sinh lời hàng nghìn phần trăm cho các môn đệ O'Neil.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- ==================== CHỦ ĐỀ 2 ==================== -->
+    <article class="pillar-card" id="pillar-2">
+      <div class="pillar-header">
+        <div class="pillar-badge">2</div>
+        <div class="pillar-title-wrap">
+          <h2>Kỹ Thuật Pocket Pivot & Quản Trị Danh Mục Tập Trung</h2>
+          <div class="sub">Mua sớm trong nền giá · Mẫu hình IPO U-turn · Sóng ngành lớn (Big Stock) · Danh mục tập trung 12 - 18 vị thế</div>
+        </div>
+      </div>
+
+      <div class="box-takeaway">
+        <h3>💡 Ý tưởng cốt lõi (Core Concept)</h3>
+        <p><strong>1. Điểm mua Pocket Pivot — Bước nhảy vọt của O’Neil cải tiến:</strong></p>
+        <ul>
+          <li><em>Định nghĩa định lượng:</em> Một điểm Pocket Pivot xuất hiện khi giá bật nảy từ đường trung bình động (MA 10 ngày hoặc MA 50 ngày) với khối lượng lớn hơn khối lượng cao nhất của <strong>bất kỳ phiên giảm giá nào trong 10 phiên trước đó</strong>.</li>
+          <li><em>Lợi thế chiến lược:</em> Cho phép giải ngân ngay bên trong nền giá trước khi điểm Breakout truyền thống xảy ra. Giá vốn thấp hơn tạo ra "lớp đệm lợi nhuận" an toàn, triệt tiêu nguy cơ bị dính cú rũ bỏ (shakeout) thường gặp tại các điểm phá vỡ đỉnh.</li>
+        </ul>
+        <p><strong>2. Mẫu hình IPO U-turn (Chữ U bứt phá):</strong> Thường xuất hiện ở các siêu cổ phiếu công nghệ mới lên sàn. Cổ phiếu bị bán tháo trong thị trường gấu, sau đó hồi phục hình chữ U mạnh đến mức không kịp tạo quai chén. Điểm mua xuất hiện khi cổ phiếu vượt đỉnh cũ kèm Gap-up hoặc Pocket Pivot.</p>
+        <p><strong>3. Nguyên lý Sóng Ngành Lớn (The Big Stock Principle):</strong> Khi nhiều cổ phiếu trong cùng một nhóm ngành đồng loạt thiết lập nền giá kiến tạo và xuất hiện Pocket Pivot cùng lúc, đó là chỉ báo chắc chắn về dòng tiền tổ chức quy mô lớn đang thâu tóm toàn ngành.</p>
+        <p><strong>4. Danh mục tập trung — Kẻ thù của Alpha là sự dàn trải:</strong> Gerald Loeb từng nhận định: <em>"Đa dạng hóa là phòng ngừa cho sự ngạo mạn."</em> Để kiếm lợi nhuận 18.000%, Morales và Kacher dồn 15-25% NAV cho mỗi vị thế dẫn dắt, duy trì danh mục tối ưu từ 12-18 vị thế và chỉ tập trung vào 2-3 siêu cổ phiếu mạnh nhất (Homeruns).</p>
+      </div>
+
+      <div class="box-action">
+        <h3>✅ Hành động áp dụng ngay (Action Steps)</h3>
+        <ul class="action-checklist">
+          <li class="action-item">
+            <input type="checkbox" id="act-2-1" class="chk-task">
+            <label class="action-text" for="act-2-1">
+              <strong>Áp dụng Quy trình giải ngân 4 bước:</strong> (1) Mua thăm dò 10-15% tại Pocket Pivot $\rightarrow$ (2) Gia tăng khi Breakout nền giá $\rightarrow$ (3) Mua thêm khi Pullback về MA 10 ngày với volume cạn kiệt $\rightarrow$ (4) Bán các mã yếu để dồn lực cho 2-3 mã dẫn đầu.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-2-2" class="chk-task">
+            <label class="action-text" for="act-2-2">
+              <strong>Kiểm tra điều kiện Pocket Pivot:</strong> Đảm bảo volume phiên bật tăng phải vượt đỉnh volume của tất cả các phiên giảm trong 10 ngày trước đó; điểm tựa phải là MA 10 hoặc MA 50 ngày.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-2-3" class="chk-task">
+            <label class="action-text" for="act-2-3">
+              <strong>Thu gọn danh mục:</strong> Cắt tỉa những cổ phiếu lình xình, không giữ quá 18 mã; dồn tỷ trọng 15-25% cho các siêu cổ phiếu có mức tăng trưởng EPS và Doanh số > 50%.
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="box-quote">
+        <p>“Hãy để tất cả trứng mà bạn hiểu rõ vào một giỏ và trông coi chiếc giỏ ấy thật cẩn thận.”</p>
+        <div class="quote-author">— William J. O’Neil</div>
+      </div>
+
+      <div class="box-pitfall">
+        <h3>⚠️ Sai lầm & Cạm bẫy cần tránh (Pitfalls)</h3>
+        <p><strong>Mua Pocket Pivot dưới đường MA 50 ngày đang dốc xuống:</strong> Một điểm Pocket Pivot chỉ hợp lệ khi cổ phiếu vận động trong nền giá kiến tạo và nằm trên hoặc vừa mới vượt lên các đường MA chủ chốt. Mua khi cổ phiếu đang trong xu hướng giảm dài hạn (dưới MA 200 ngày) chỉ là bắt dao rơi.</p>
+      </div>
+
+      <div class="accordion-wrap">
+        <div class="accordion-header">
+          <span class="accordion-title">📖 Ví dụ thực tế trong sách: Siêu sóng eBay 1998, Iomega 1996 & Năng lượng mặt trời 2007</span>
+          <span class="accordion-icon">▼</span>
+        </div>
+        <div class="accordion-content">
+          <p><strong>eBay (EBAY) 1998:</strong> Vừa IPO xong thì gặp thị trường gấu, giảm 33%. Khi thị trường có Ngày bùng nổ theo đà (Follow-through day), EBAY hình thành mẫu hình chữ U hoàn hảo và mở khoảng trống tăng giá (Gap-up). Các môn đệ O'Neil mua ngay tại Pocket Pivot và thu hoạch lợi nhuận khổng lồ khi cổ phiếu tăng gấp nhiều lần.</p>
+          <p><strong>Iomega (IOM) 1996:</strong> Doanh số tăng tốc từ 60% lên 287%, EPS tăng 700%. Cổ phiếu bám chặt đường MA 10 ngày trong suốt nhịp chạy nước rút. Mỗi lần giá kéo ngược về MA 10 ngày với volume thấp đều là điểm mua gia tăng vị thế hoàn hảo.</p>
+          <p><strong>Sóng ngành Năng lượng mặt trời 2007:</strong> Toàn bộ nhóm FSLR, STP, JASO, SPWRA đồng loạt xuất hiện Pocket Pivot trong cùng một tuần. Việc nhận diện sóng ngành giúp Morales và Kacher tự tin dồn tỷ trọng tối đa và tạo ra hiệu suất vượt trội.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- ==================== CHỦ ĐỀ 3 ==================== -->
+    <article class="pillar-card" id="pillar-3">
+      <div class="pillar-header">
+        <div class="pillar-badge">3</div>
+        <div class="pillar-title-wrap">
+          <h2>Kỹ Thuật Bán, Cắt Lỗ & Bảo Vệ Nguồn Vốn Tâm Lý</h2>
+          <div class="sub">Kỷ luật cắt lỗ 6 - 7% tự động · Quy tắc nắm giữ 8 tuần · Hệ thống đường dẫn MA 10 & MA 50 ngày</div>
+        </div>
+      </div>
+
+      <div class="box-takeaway">
+        <h3>💡 Ý tưởng cốt lõi (Core Concept)</h3>
+        <p><strong>1. Tuyến phòng thủ đầu tiên — Cắt lỗ tự động tại 6-7%:</strong> Cắt lỗ không chỉ bảo vệ tài khoản mà là <strong>bảo vệ nguồn vốn tâm lý</strong>. Một khoản lỗ lớn luôn gây thiệt hại gấp đôi: vừa làm teo tóp vốn, vừa cướp đi sự tự tin và khả năng ra quyết định sáng suốt của nhà đầu tư. Không có ngoại lệ, không có tranh luận với bảng điện.</p>
+        <p><strong>2. Quy tắc 8 tuần (The 8-Week Rule):</strong> Nếu một cổ phiếu bứt phá khỏi nền giá chuẩn và <strong>tăng từ 20% trở lên trong vòng chưa đầy 3 tuần</strong>, bạn bắt buộc phải nắm giữ nó tối thiểu 8 tuần (tính từ điểm breakout). Đây là bộ lọc thần kỳ giúp trader không bị "rũ bỏ" khỏi các siêu cổ phiếu lớn nhất thị trường.</p>
+        <p><strong>3. Hệ thống dẫn đường MA 10 & MA 50 ngày:</strong></p>
+        <ul>
+          <li><em>MA 10 ngày:</em> Kim chỉ nam cho các siêu cổ phiếu tăng trưởng nóng, dẫn dắt thị trường (như nhóm Dot-com 1999). Vi phạm MA 10 ngày là tín hiệu cảnh báo chốt lời sớm.</li>
+          <li><em>MA 50 ngày:</em> Đường xu hướng chính cho cổ phiếu vốn hóa lớn. <em>Quy tắc xác nhận vi phạm:</em> Giá phải đóng cửa dưới MA 50 ngày VÀ phiên tiếp theo phá vỡ đáy thấp nhất của phiên vi phạm đó. Quy tắc này giúp loại bỏ 80% các nhịp rũ bỏ giả (fakeout).</li>
+        </ul>
+        <p><strong>4. Tuyệt đối cấm Bình quân giá xuống:</strong> Chỉ được phép <em>Bình quân giá lên (Pyramiding)</em> khi thị trường chứng minh bạn đang đúng. Bình quân giá xuống khi tài khoản đang lỗ là hành vi tự sát của kẻ đánh bạc.</p>
+      </div>
+
+      <div class="box-action">
+        <h3>✅ Hành động áp dụng ngay (Action Steps)</h3>
+        <ul class="action-checklist">
+          <li class="action-item">
+            <input type="checkbox" id="act-3-1" class="chk-task">
+            <label class="action-text" for="act-3-1">
+              <strong>Cài đặt lệnh dừng lỗ tự động 6-7%:</strong> Đặt lệnh Stop Loss ngay khi vừa khớp lệnh mua; không bao giờ để khoản lỗ vượt quá ngưỡng 8%.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-3-2" class="chk-task">
+            <label class="action-text" for="act-3-2">
+              <strong>Khóa vị thế theo Quy tắc 8 tuần:</strong> Đánh dấu lịch nắm giữ 8 tuần cho bất kỳ mã nào đạt mức lãi 20% trong 3 tuần đầu tiên; bỏ qua mọi biến động rung lắc ngắn hạn.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-3-3" class="chk-task">
+            <label class="action-text" for="act-3-3">
+              <strong>Nhận diện đỉnh cao trào (Climax Top):</strong> Bán chốt lời khi cổ phiếu tăng dốc đứng từ 25-50% trong 1-2 tuần kèm theo các phiên kiệt sức bùng nổ volume.
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="box-quote">
+        <p>“Chấp nhận khoản lỗ nhỏ ban đầu luôn là hành động sáng suốt nhất... Lãi tự bản thân nó đã là điều tốt đẹp, nhưng lỗ thì không bao giờ tự biến mất nếu bạn không cắt bỏ nó.”</p>
+        <div class="quote-author">— Jesse Livermore</div>
+      </div>
+
+      <div class="box-pitfall">
+        <h3>⚠️ Sai lầm & Cạm bẫy cần tránh (Pitfalls)</h3>
+        <p><strong>Chốt lời non siêu cổ phiếu vì sợ mất lãi:</strong> Khi cổ phiếu vừa tăng 5-10%, trader non nớt vội vàng bán sạch vì tâm lý lo âu. Kết quả là bỏ lỡ những siêu cổ phiếu tăng 200-500% và giữ lại toàn những mã yếu ớt trong danh mục.</p>
+      </div>
+
+      <div class="accordion-wrap">
+        <div class="accordion-header">
+          <span class="accordion-title">📖 Ví dụ thực tế trong sách: Thoát hiểm kỳ diệu trong Sự cố Bong bóng Dot-com tháng 4/1999</span>
+          <span class="accordion-icon">▼</span>
+        </div>
+        <div class="accordion-content">
+          <p><strong>Tháng 4/1999:</strong> Chris Kacher đang sử dụng đòn bẩy tối đa (200% margin). Ông nhận thấy sự hưng phấn điên cuồng khi các công ty chỉ cần gắn đuôi ".com" là tăng giá gấp đôi trong vài phiên (Climax Top), đồng thời chỉ số NASDAQ xuất hiện các phiên phân phối nặng nề.</p>
+          <p>Chỉ trong <strong>20 phút đầu phiên mở cửa</strong>, Kacher đã kiên quyết bán tháo hạ tỷ trọng margin từ 200% xuống còn 35%. Ngay trong ngày hôm đó, chỉ số INX sụp đổ tới 9.6% và thị trường bước vào đợt thanh trừng dữ dội. Sự dứt khoát không ngoái lại đã cứu sống toàn bộ khối tài sản khổng lồ của ông.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- ==================== CHỦ ĐỀ 4 ==================== -->
+    <article class="pillar-card" id="pillar-4">
+      <div class="pillar-header">
+        <div class="pillar-badge">4</div>
+        <div class="pillar-title-wrap">
+          <h2>Định Thời Điểm Thị Trường & Tâm Lý "Vùng Thăng Hoa" (In The Zone)</h2>
+          <div class="sub">Mô hình định thời điểm Dr. K · Follow-through Day & Distribution Days · Thảm họa Ferrari Modena · Nguyên tắc Cổ phiếu trước - Chỉ số sau</div>
+        </div>
+      </div>
+
+      <div class="box-takeaway">
+        <h3>💡 Ý tưởng cốt lõi (Core Concept)</h3>
+        <p><strong>1. Mô hình Định thời điểm của Tiến sĩ K (Dr. K Model):</strong> Đạt tỷ suất sinh lợi trung bình 33.1%/năm từ 1974 đến 2006. Mô hình không dựa trên dự đoán cảm tính mà chuẩn hóa thống kê hành vi giá/khối lượng trên NASDAQ và S&P 500:</p>
+        <ul>
+          <li><em>Ngày bùng nổ theo đà (Follow-through Day - FTD):</em> Xuất hiện từ ngày thứ 4 đến ngày thứ 7 của nỗ lực hồi phục, với chỉ số tăng mạnh (>1.5-2%) kèm khối lượng cao hơn phiên trước. Đây là đèn xanh xác nhận thị trường tạo đáy.</li>
+          <li><em>Ngày phân phối (Distribution Days):</em> Chỉ số giảm >0.2% với khối lượng lớn hơn phiên trước. Xuất hiện 4-5 ngày phân phối trong vòng 4-5 tuần là tín hiệu cảnh báo thị trường sắp gãy sóng.</li>
+        </ul>
+        <p><strong>2. Nguyên tắc "Quan sát Cổ phiếu TRƯỚC, Chỉ số thị trường SAU":</strong> Các siêu cổ phiếu dẫn dắt thường tạo đáy và bứt phá <em>trước khi chỉ số chung tạo đáy từ vài ngày đến vài tuần</em>. Đừng để sự ảm đạm của chỉ số chung làm mờ mắt trước những cổ phiếu đang thiết lập nền giá kiến tạo.</p>
+        <p><strong>3. Vùng Thăng Hoa (In the Zone):</strong> Trạng thái giao dịch đỉnh cao khi trader hoàn toàn hiện diện trong hiện tại (Power of Now). Loại bỏ sự "trí thức hóa quá mức" (over-intellectualization). Bạn không cần biết ngày mai nền kinh tế ra sao, bạn chỉ cần đọc đúng hành vi cung cầu đang phản ánh trên bảng điện ngay lúc này.</p>
+      </div>
+
+      <div class="box-action">
+        <h3>✅ Hành động áp dụng ngay (Action Steps)</h3>
+        <ul class="action-checklist">
+          <li class="action-item">
+            <input type="checkbox" id="act-4-1" class="chk-task">
+            <label class="action-text" for="act-4-1">
+              <strong>Đếm ngày phân phối thị trường chung:</strong> Ghi nhật ký số lượng ngày phân phối trên NASDAQ / S&P 500; khi chạm ngưỡng 5 ngày, tự động đóng margin và phòng thủ.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-4-2" class="chk-task">
+            <label class="action-text" for="act-4-2">
+              <strong>Kiểm tra hành động của Cổ phiếu dẫn dắt:</strong> Nếu thị trường chung điều chỉnh nhưng cổ phiếu dẫn dắt vẫn giữ vững trên đường MA 10/20 ngày, giữ nguyên vị thế và không bán hoảng loạn.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-4-3" class="chk-task">
+            <label class="action-text" for="act-4-3">
+              <strong>Loại bỏ cái tôi khi trúng quả đậm:</strong> Sau mỗi chuỗi thắng lớn, bắt buộc rút bớt lợi nhuận ra khỏi tài khoản giao dịch hoặc giảm quy mô vị thế để giữ cái đầu lạnh.
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="box-quote">
+        <p>“Mấu chốt để thành công trên thị trường chứng khoán không phải là dự đoán thị trường sẽ diễn ra như thế nào. Bạn chỉ cần biết và hiểu được thị trường đã thực sự hành động ra sao trong hiện tại.”</p>
+        <div class="quote-author">— William J. O’Neil</div>
+      </div>
+
+      <div class="box-pitfall">
+        <h3>⚠️ Sai lầm & Cạm bẫy cần tránh (Pitfalls)</h3>
+        <p><strong>Bẫy Bản Ngã sau chiến thắng lớn:</strong> Thắng lớn sinh ra sự kiêu ngạo, khiến trader tưởng mình tài giỏi hơn thị trường và bắt đầu "ra lệnh" cho bảng điện. Đây là thời khắc nguy hiểm nhất dẫn đến các cú ngã đau đớn nhất.</p>
+      </div>
+
+      <div class="accordion-wrap">
+        <div class="accordion-header">
+          <span class="accordion-title">📖 Ví dụ thực tế trong sách: Thảm họa "Giao dịch Modena" & Bỏ lỡ siêu cổ FSLR 2007</span>
+          <span class="accordion-icon">▼</span>
+        </div>
+        <div class="accordion-content">
+          <p><strong>Thảm họa Ferrari Modena (2001) của Chris Kacher:</strong> Kiếm được khoản lợi nhuận khổng lồ từ việc Short cổ phiếu công nghệ QQQQ đủ mua siêu xe Ferrari Modena ($600,000). Say men chiến thắng, Kacher dùng đòn bẩy kịch kim tin rằng thị trường sẽ sụp đổ sâu hơn. Nhưng chỉ trong một phiên hồi phục bất ngờ, ông đã mất trắng hơn 1.000.000 USD tiền lãi. Kacher đúc kết: <em>"Bản ngã là kẻ thù lớn nhất; thành công rực rỡ thường là mầm mống cho sự sụp đổ."</em></p>
+          <p><strong>Gil Morales bỏ lỡ FSLR năm 2007:</strong> Morales để bản thân bị dao động bởi những email tiêu cực của các đồng nghiệp về việc chỉ số NASDAQ yếu ớt. Ông hoảng loạn bán sạch siêu cổ First Solar (FSLR) ngay tại nhịp rũ bỏ MA 20 ngày. Ngay sau đó, FSLR bứt phá tăng vọt phi mã mà không có ông trên tàu. Bài học: Luôn nhìn cổ phiếu dẫn đầu trước khi nhìn chỉ số!</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- ==================== MA TRẬN TỔNG KẾT CHIẾN LƯỢC ==================== -->
+    <section class="matrix-section">
+      <div class="matrix-title">
+        <span>⚡</span>
+        <span>Ma Trận Đối Chiếu: Siêu Cổ Phiếu (Đầm Đỏ) vs Cổ Phiếu Sai Lầm (Đầm Vàng)</span>
+      </div>
+
+      <div class="table-container">
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th>Tiêu chí so sánh</th>
+              <th>Siêu Cổ Phiếu (Đầm Đỏ)</th>
+              <th>Cổ Phiếu Sai Lầm (Đầm Vàng)</th>
+              <th>Hành động của Trader</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Hành động giá</strong></td>
+              <td>Thiết lập Đỉnh mới (New Highs) từ nền giá kiến tạo.</td>
+              <td>Thiết lập Đáy mới hoặc giảm sâu từ đỉnh cũ.</td>
+              <td>Chỉ mua cổ phiếu bứt phá ở đỉnh cao mới.</td>
+            </tr>
+            <tr>
+              <td><strong>Khối lượng</strong></td>
+              <td>Tăng vọt (>40-50%) tại điểm bứt phá / Pocket Pivot.</td>
+              <td>Khối lượng thấp khi tăng, bùng nổ khi giá giảm.</td>
+              <td>Kiểm tra sự tham gia của tổ chức qua Volume.</td>
+            </tr>
+            <tr>
+              <td><strong>Yếu tố cơ bản</strong></td>
+              <td>EPS và Doanh số tăng tốc mạnh (>25-100%).</td>
+              <td>Lợi nhuận suy giảm hoặc tăng trưởng thất thường.</td>
+              <td>Đào sâu báo cáo tài chính hàng quý.</td>
+            </tr>
+            <tr>
+              <td><strong>Điểm mua</strong></td>
+              <td>Xuất hiện Pocket Pivot hoặc IPO U-turn.</td>
+              <td>Đi ngang buồn tẻ hoặc bứt phá giả (False Breakout).</td>
+              <td>Giải ngân thăm dò ngay bên trong nền giá.</td>
+            </tr>
+            <tr>
+              <td><strong>Sự bảo trợ</strong></td>
+              <td>Có ít nhất 1-2 quỹ đầu tư hàng đầu (Top Funds) nắm giữ.</td>
+              <td>Không có sự tham gia của dòng tiền lớn.</td>
+              <td>Theo dõi báo cáo sở hữu của các quỹ lớn.</td>
+            </tr>
+            <tr>
+              <td><strong>Tâm thế tiếp cận</strong></td>
+              <td>Mua khi "đắt" vì hiểu rõ tiềm năng tăng trưởng.</td>
+              <td>Ham mua "rẻ", bình quân giá xuống khi lỗ.</td>
+              <td>Loại bỏ tâm lý mua sắm, giữ tư duy kinh doanh.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="matrix-title" style="font-size: 1.2rem; margin-top: 28px;">
+        <span>🎯</span>
+        <span>Quy Trình Xử Lý Lệnh 5 Giai Đoạn</span>
+      </div>
+
+      <div class="table-container">
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th>Trạng thái</th>
+              <th>Hành động kỹ thuật</th>
+              <th>Kỷ luật tâm lý bắt buộc</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1. Thăm dò (Setup)</strong></td>
+              <td>Mua 10-15% tại Pocket Pivot bên trong nền giá.</td>
+              <td>Giữ sự kiên nhẫn, không yêu cổ phiếu quá sớm.</td>
+            </tr>
+            <tr>
+              <td><strong>2. Bùng nổ (Confirmation)</strong></td>
+              <td>Mua thêm khi giá Breakout với khối lượng lớn.</td>
+              <td>Tự tin hành động theo dữ liệu giá thực tế.</td>
+            </tr>
+            <tr>
+              <td><strong>3. Vi phạm (Violation)</strong></td>
+              <td>Cắt lỗ không điều kiện khi giá chạm ngưỡng -7%.</td>
+              <td>Cấm bình quân giá xuống. Triệt tiêu cái tôi.</td>
+            </tr>
+            <tr>
+              <td><strong>4. Tăng tốc (Holding)</strong></td>
+              <td>Áp dụng Quy tắc 8 tuần nếu lãi $\ge 20\%$ trong 3 tuần đầu.</td>
+              <td>Tránh chốt lãi non do sợ hãi rung lắc ngắn hạn.</td>
+            </tr>
+            <tr>
+              <td><strong>5. Thoát vị thế (Exit)</strong></td>
+              <td>Bán khi giá đóng cửa dưới MA 50 ngày và phá đáy phiên đó.</td>
+              <td>Bảo vệ lợi nhuận và sự tự tin cho chu kỳ mới.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© Tóm tắt chiến lược chuyên sâu tác phẩm <strong>Trade Like an O'Neil Disciple</strong> — Gil Morales & Dr. Chris Kacher.</p>
+    <p style="margin-top: 6px; font-size: 0.8rem;">Giao diện Web Tương Tác chuẩn Front-end cho Nhà Đầu Tư Tăng Trưởng Siêu Cổ Phiếu.</p>
+  </footer>
+
+  <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Reading Progress Bar
+      const progressBar = document.getElementById('progress-bar');
+      window.addEventListener('scroll', () => {
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+        progressBar.style.width = progress + '%';
+      });
+
+      // 2. Dark / Light Mode Toggle with LocalStorage
+      const themeToggleBtn = document.getElementById('theme-toggle');
+      const themeIcon = document.getElementById('theme-icon');
+      const themeText = document.getElementById('theme-text');
+      const htmlEl = document.documentElement;
+
+      const savedTheme = localStorage.getItem('oneil_theme') || 'dark';
+      setTheme(savedTheme);
+
+      themeToggleBtn.addEventListener('click', () => {
+        const currentTheme = htmlEl.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        setTheme(newTheme);
+      });
+
+      function setTheme(theme) {
+        htmlEl.setAttribute('data-theme', theme);
+        localStorage.setItem('oneil_theme', theme);
+        if (theme === 'light') {
+          themeIcon.textContent = '🌙';
+          themeText.textContent = 'Chế độ tối';
+        } else {
+          themeIcon.textContent = '☀️';
+          themeText.textContent = 'Chế độ sáng';
+        }
+      }
+
+      // 3. Action Checkboxes with LocalStorage & Progress Counter
+      const checkboxes = document.querySelectorAll('.chk-task');
+      const taskCounter = document.getElementById('task-counter');
+      const totalTasks = checkboxes.length;
+
+      // Load saved state
+      const savedTasks = JSON.parse(localStorage.getItem('oneil_tasks') || '[]');
+      savedTasks.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.checked = true;
+      });
+      updateCounter();
+
+      checkboxes.forEach(chk => {
+        chk.addEventListener('change', () => {
+          const completedIds = Array.from(checkboxes)
+            .filter(c => c.checked)
+            .map(c => c.id);
+          localStorage.setItem('oneil_tasks', JSON.stringify(completedIds));
+          updateCounter();
+        });
+      });
+
+      function updateCounter() {
+        const completedCount = document.querySelectorAll('.chk-task:checked').length;
+        taskCounter.textContent = `Đã hoàn thành: ${completedCount}/${totalTasks} bài tập`;
+        if (completedCount === totalTasks) {
+          taskCounter.style.color = 'var(--accent-gold)';
+          taskCounter.textContent = `🎉 Hoàn thành xuất sắc ${totalTasks}/${totalTasks} bài tập!`;
+        } else {
+          taskCounter.style.color = 'var(--accent-green)';
+        }
+      }
+
+      // 4. Accordion Toggle
+      const accordions = document.querySelectorAll('.accordion-wrap');
+      accordions.forEach(acc => {
+        const header = acc.querySelector('.accordion-header');
+        header.addEventListener('click', () => {
+          acc.classList.toggle('active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

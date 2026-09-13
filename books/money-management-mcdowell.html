@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tóm Tắt Chuyên Sâu: A Trader’s Money Management System — Bennett A. McDowell</title>
+  <style>
+    /* ==========================================================================
+       CSS VARIABLES & THEMES (DARK & LIGHT)
+       ========================================================================== */
+    :root {
+      --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+      
+      /* Dark Theme (Mặc định) */
+      --bg-body: #0b1120;
+      --bg-card: #151f32;
+      --bg-card-sub: #1e293b;
+      --bg-glass: rgba(21, 31, 50, 0.9);
+      --border-color: #27354f;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-soft: #cbd5e1;
+
+      /* Phân loại màu Accent */
+      --accent-gold: #f59e0b;
+      --accent-gold-bg: rgba(245, 158, 11, 0.08);
+      --accent-gold-border: rgba(245, 158, 11, 0.35);
+
+      --accent-green: #10b981;
+      --accent-green-bg: rgba(16, 185, 129, 0.08);
+      --accent-green-border: rgba(16, 185, 129, 0.35);
+
+      --accent-red: #ef4444;
+      --accent-red-bg: rgba(239, 68, 68, 0.08);
+      --accent-red-border: rgba(239, 68, 68, 0.35);
+
+      --accent-blue: #3b82f6;
+      --accent-blue-bg: rgba(59, 130, 246, 0.08);
+      --accent-blue-border: rgba(59, 130, 246, 0.35);
+
+      --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.25);
+      --shadow-md: 0 12px 28px rgba(0, 0, 0, 0.35);
+      --radius: 12px;
+      --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-body: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-card-sub: #f1f5f9;
+      --bg-glass: rgba(255, 255, 255, 0.92);
+      --border-color: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-soft: #334155;
+
+      --accent-gold-bg: #fffbeb;
+      --accent-gold-border: #fcd34d;
+
+      --accent-green-bg: #ecfdf5;
+      --accent-green-border: #6ee7b7;
+
+      --accent-red-bg: #fef2f2;
+      --accent-red-border: #fca5a5;
+
+      --accent-blue-bg: #eff6ff;
+      --accent-blue-border: #93c5fd;
+
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 10px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    /* ==========================================================================
+       RESET & BASE STYLES
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      line-height: 1.75;
+      font-size: 16px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Reading Progress Bar */
+    #progress-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: transparent;
+      z-index: 1000;
+    }
+
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-gold), var(--accent-green), var(--accent-blue));
+      transition: width 0.1s ease-out;
+    }
+
+    /* Top Sticky Utility Bar */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 900;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: var(--bg-glass);
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: var(--transition);
+    }
+
+    .brand-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .controls-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .task-counter-badge {
+      font-size: 0.82rem;
+      font-weight: 600;
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-color);
+      padding: 4px 14px;
+      border-radius: 999px;
+      color: var(--accent-green);
+      white-space: nowrap;
+    }
+
+    .theme-toggle-btn {
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition);
+    }
+
+    .theme-toggle-btn:hover {
+      border-color: var(--accent-gold);
+      transform: translateY(-1px);
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 36px 20px 80px;
+    }
+
+    /* ==========================================================================
+       HERO BOOK HEADER
+       ========================================================================== */
+    .hero-book {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.98) 100%);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 40px 32px;
+      margin-bottom: 44px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+
+    [data-theme="light"] .hero-book {
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    }
+
+    .hero-book::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent-gold), var(--accent-blue));
+    }
+
+    .book-tag {
+      display: inline-block;
+      padding: 4px 14px;
+      background: var(--accent-gold-bg);
+      border: 1px solid var(--accent-gold-border);
+      color: var(--accent-gold);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+
+    .hero-book h1 {
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      line-height: 1.25;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    .hero-book .author {
+      font-size: 1.1rem;
+      color: var(--accent-blue);
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+      padding: 18px 0;
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .meta-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      margin-bottom: 3px;
+    }
+
+    .meta-val {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-soft);
+    }
+
+    .context-box {
+      margin-top: 18px;
+      font-size: 0.95rem;
+      color: var(--text-soft);
+      line-height: 1.7;
+    }
+
+    .one-liner {
+      background: var(--accent-gold-bg);
+      border-left: 4px solid var(--accent-gold);
+      padding: 16px 20px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-style: italic;
+      color: var(--text-main);
+      font-size: 1.05rem;
+      margin-top: 18px;
+    }
+
+    /* Risk Badge Pills */
+    .risk-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .risk-pill {
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-color);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--accent-red);
+    }
+
+    /* ==========================================================================
+       SECTION / PILLAR MODULES
+       ========================================================================== */
+    .pillar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 34px 28px;
+      margin-bottom: 44px;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+
+    .pillar-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .pillar-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .pillar-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-gold), #d97706);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 800;
+      flex-shrink: 0;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
+    }
+
+    .pillar-title-wrap h2 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--text-main);
+    }
+
+    .pillar-title-wrap .sub {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ==========================================================================
+       SPECIALIZED BLOCKS
+       ========================================================================== */
+    
+    /* 1. Core Concept (Gold) */
+    .box-takeaway {
+      background: var(--accent-gold-bg);
+      border: 1px solid var(--accent-gold-border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin-bottom: 22px;
+    }
+
+    .box-takeaway h3 {
+      color: var(--accent-gold);
+      font-size: 1.08rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .box-takeaway p {
+      color: var(--text-soft);
+      font-size: 0.98rem;
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+
+    .box-takeaway p:last-child {
+      margin-bottom: 0;
+    }
+
+    .box-takeaway ul, .box-takeaway ol {
+      margin-left: 22px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+      color: var(--text-soft);
+    }
+
+    .box-takeaway li {
+      margin-bottom: 6px;
+    }
+
+    /* 2. Action Steps (Green Checklist) */
+    .box-action {
+      background: var(--accent-green-bg);
+      border: 1px solid var(--accent-green-border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin-bottom: 22px;
+    }
+
+    .box-action h3 {
+      color: var(--accent-green);
+      font-size: 1.08rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .action-checklist {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .action-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .action-item input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--accent-green);
+      border-radius: 6px;
+      outline: none;
+      background: var(--bg-card);
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+      margin-top: 3px;
+      transition: var(--transition);
+    }
+
+    .action-item input[type="checkbox"]:checked {
+      background: var(--accent-green);
+    }
+
+    .action-item input[type="checkbox"]:checked::after {
+      content: "✓";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .action-text {
+      color: var(--text-soft);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      transition: var(--transition);
+    }
+
+    .action-item input[type="checkbox"]:checked ~ .action-text {
+      text-decoration: line-through;
+      opacity: 0.55;
+    }
+
+    /* 3. Quote Card (Blue with thick left border) */
+    .box-quote {
+      background: var(--accent-blue-bg);
+      border: 1px solid var(--accent-blue-border);
+      border-left: 6px solid var(--accent-blue);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 18px 24px;
+      margin-bottom: 22px;
+    }
+
+    .box-quote p {
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--text-main);
+      line-height: 1.65;
+    }
+
+    .box-quote .quote-author {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-blue);
+      text-align: right;
+      margin-top: 8px;
+      font-style: normal;
+    }
+
+    /* 4. Pitfalls (Red) */
+    .box-pitfall {
+      background: var(--accent-red-bg);
+      border: 1px solid var(--accent-red-border);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      margin-bottom: 22px;
+    }
+
+    .box-pitfall h3 {
+      color: var(--accent-red);
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .box-pitfall p {
+      color: var(--text-soft);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
+
+    .box-pitfall p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ==========================================================================
+       ACCORDION: CASE STUDIES
+       ========================================================================== */
+    .accordion-wrap {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--bg-card-sub);
+      margin-top: 14px;
+    }
+
+    .accordion-header {
+      padding: 14px 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: transparent;
+      user-select: none;
+      transition: background 0.2s ease;
+    }
+
+    .accordion-header:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    [data-theme="light"] .accordion-header:hover {
+      background: rgba(0, 0, 0, 0.02);
+    }
+
+    .accordion-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .accordion-icon {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      transition: transform 0.3s ease;
+    }
+
+    .accordion-wrap.active .accordion-icon {
+      transform: rotate(180deg);
+      color: var(--accent-gold);
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0, 1, 0, 1);
+      padding: 0 20px;
+    }
+
+    .accordion-wrap.active .accordion-content {
+      max-height: 850px;
+      transition: max-height 0.4s ease-in-out;
+      padding: 18px 20px 22px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .accordion-content p {
+      font-size: 0.92rem;
+      color: var(--text-soft);
+      line-height: 1.68;
+      margin-bottom: 10px;
+    }
+
+    .accordion-content p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ==========================================================================
+       KEY TAKEAWAYS MATRIX (TABLE)
+       ========================================================================== */
+    .matrix-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 34px 28px;
+      margin-bottom: 44px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .matrix-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      color: var(--accent-gold);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      margin-top: 16px;
+    }
+
+    table.matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      text-align: left;
+    }
+
+    table.matrix-table th, table.matrix-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    table.matrix-table th {
+      background: var(--bg-card-sub);
+      color: var(--accent-gold);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+
+    table.matrix-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    [data-theme="light"] table.matrix-table tr:hover td {
+      background: rgba(0, 0, 0, 0.02);
+    }
+
+    table.matrix-table td strong {
+      color: var(--text-main);
+    }
+
+    /* 20 Traits Grid */
+    .traits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .trait-item {
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-color);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      color: var(--text-soft);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .trait-item::before {
+      content: "✦";
+      color: var(--accent-gold);
+      font-size: 0.8rem;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    @media (max-width: 640px) {
+      .pillar-header {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .top-bar {
+        padding: 10px 16px;
+      }
+      .pillar-card {
+        padding: 22px 16px;
+      }
+      .hero-book {
+        padding: 26px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Reading Progress Bar -->
+  <div id="progress-container">
+    <div id="progress-bar"></div>
+  </div>
+
+  <!-- Sticky Top Utility Bar -->
+  <header class="top-bar">
+    <div class="brand-title">
+      <span>🛡️</span>
+      <span>Risk & Money Management Masterclass</span>
+    </div>
+    <div class="controls-group">
+      <div class="task-counter-badge" id="task-counter">
+        Đã hoàn thành: 0/12 bài tập
+      </div>
+      <button class="theme-toggle-btn" id="theme-toggle">
+        <span id="theme-icon">☀️</span>
+        <span id="theme-text">Chế độ sáng</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ==================== HERO SECTION: TỔNG QUAN SÁCH ==================== -->
+    <section class="hero-book">
+      <span class="book-tag">Tâm Lý Hành Vi & Quản Trị Rủi Ro Chuyên Sâu</span>
+      <h1>A Trader’s Money Management System</h1>
+      <div class="author">Tác giả: Bennett A. McDowell · Người sáng lập hệ thống Applied Reality Trading (ART)</div>
+      
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">Lĩnh vực cốt lõi</span>
+          <span class="meta-val">Quản trị tiền (Money Management), Tâm lý học rủi ro</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Hệ thống trọng tâm</span>
+          <span class="meta-val">Ngăn chặn Nguy cơ Phá sản (Risk of Ruin) & Kỷ luật 2%</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Mục tiêu tối thượng</span>
+          <span class="meta-val">Bảo vệ vốn để được quyền tồn tại & Đạt sự tĩnh tại (Nirvana)</span>
+        </div>
+      </div>
+
+      <div class="context-box">
+        <strong>Bối cảnh & Mục đích cốt lõi:</strong> Trong thị trường tài chính, hầu hết người mới tham gia chỉ ám ảnh bởi việc tìm chén thánh điểm vào lệnh (Entry), tôn sùng lợi nhuận ngắn hạn và xem nhẹ việc kiểm soát rủi ro vì sự khô khan của nó. Cuốn sách khẳng định: Quản trị tiền (Money Management - MM) không đơn thuần là một phép tính toán học; nó là <em>"mảnh ghép cuối cùng"</em> quyết định việc trader có sống sót qua những chuỗi thua lỗ khắc nghiệt hay không. Một kế hoạch quản trị rủi ro vững chắc đóng vai trò như hợp đồng bảo hiểm sự sống cho tài khoản giao dịch.
+      </div>
+
+      <div class="risk-badges">
+        <span class="risk-pill">⚠️ Trade Risk (Rủi ro lệnh)</span>
+        <span class="risk-pill">⚠️ Market Risk (Rủi ro thị trường)</span>
+        <span class="risk-pill">⚠️ Margin Risk (Rủi ro đòn bẩy)</span>
+        <span class="risk-pill">⚠️ Liquidity Risk (Rủi ro thanh khoản)</span>
+        <span class="risk-pill">⚠️ Overnight Risk (Rủi ro qua đêm)</span>
+        <span class="risk-pill">⚠️ Volatility Risk (Rủi ro biến động)</span>
+      </div>
+
+      <div class="one-liner">
+        "Công việc của chúng ta với tư cách là nhà giao dịch là tạo thói quen mong đợi và chuẩn bị cho những điều không thể dự đoán được; Quản trị tiền chính là phí bảo hiểm bắt buộc để bạn được quyền tiếp tục tồn tại trên bàn chơi."
+      </div>
+    </section>
+
+    <!-- ==================== PHẦN 1 ==================== -->
+    <article class="pillar-card" id="pillar-1">
+      <div class="pillar-header">
+        <div class="pillar-badge">1</div>
+        <div class="pillar-title-wrap">
+          <h2>Tâm Lý Kiểm Soát Rủi Ro: "Tại Sao Nó Không Hề Gợi Cảm?"</h2>
+          <div class="sub">Vượt qua ảo tưởng tìm kiếm điểm vào lệnh · Bản chất của Phí bảo hiểm MM · Cơ chế kiểm soát 6 loại rủi ro trọng yếu</div>
+        </div>
+      </div>
+
+      <div class="box-takeaway">
+        <h3>💡 Ý tưởng cốt lõi (Core Concept)</h3>
+        <p><strong>1. Nghịch lý của sự nhàm chán:</strong> Việc tìm điểm vào lệnh (Entry) mang lại cảm giác phấn khích, hồi hộp và kích thích lượng lớn hormone Adrenaline. Ngược lại, việc tính toán quy mô vị thế (Position Sizing), đo lường tỷ lệ sụt giảm (Drawdown) và xác định Stop Loss lại mang tính toán học khô khan và gò bó cảm xúc. Đó là lý do đa số trader bỏ qua MM cho tới khi tài khoản bị quét sạch.</p>
+        <p><strong>2. Bản chất "Phí Bảo Hiểm":</strong> Thị trường là một môi trường bất định hoàn toàn (tương tự như thiên tai, động đất, khủng bố 11/9). Chúng ta mua bảo hiểm xe hay nhà không phải vì mong tai nạn xảy ra, mà để nếu xảy ra, cuộc sống không bị phá hủy. Stop Loss và giới hạn rủi ro 2% trên mỗi giao dịch chính là khoản phí bảo hiểm nhỏ bé bạn trả cho thị trường để giữ lại 98% mạng sống giao dịch.</p>
+        <p><strong>3. Nhận diện 6 Loại Rủi Ro Trọng Yếu:</strong></p>
+        <ul>
+          <li><em>Trade Risk:</em> Rủi ro tài chính tối đa chấp nhận mất trên mỗi lệnh (khuyến nghị $\le 2\%$).</li>
+          <li><em>Market Risk:</em> Biến cố địa chính trị, tin tức vĩ mô bất ngờ làm đảo lộn toàn bộ thị trường.</li>
+          <li><em>Margin Risk:</em> Việc bị công ty môi giới Force Sell do sử dụng đòn bẩy quá mức.</li>
+          <li><em>Liquidity Risk:</em> Khối lượng giao dịch bốc hơi khiến bạn không thể khớp lệnh thoát hiểm ở mức giá mong muốn.</li>
+          <li><em>Overnight Risk:</em> Khoảng trống giá (Gap) mở cửa ngày hôm sau đè bẹp điểm Stop Loss định sẵn.</li>
+          <li><em>Volatility Risk:</em> Biến động giá quá mạnh khiến các đợt rung lắc vô tình quét sạch lệnh trước khi giá chạy đúng hướng.</li>
+        </ul>
+      </div>
+
+      <div class="box-action">
+        <h3>✅ Hành động áp dụng ngay (Action Steps)</h3>
+        <ul class="action-checklist">
+          <li class="action-item">
+            <input type="checkbox" id="act-1-1" class="chk-task">
+            <label class="action-text" for="act-1-1">
+              <strong>Thiết lập quy tắc bất di bất dịch 2%:</strong> Không bao giờ mạo hiểm quá 2% tổng vốn tài khoản trên một thiết lập giao dịch đơn lẻ.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-1-2" class="chk-task">
+            <label class="action-text" for="act-1-2">
+              <strong>Xác định điểm thoát trước khi bấm vào lệnh:</strong> Tính toán chính xác vị trí Stop Loss và khối lượng cổ phiếu/hợp đồng (Position Size) trước khi đặt lệnh Market/Limit.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-1-3" class="chk-task">
+            <label class="action-text" for="act-1-3">
+              <strong>Coi Stop Loss là chi phí kinh doanh thông thường:</strong> Tương tự như chi phí tiền thuê mặt bằng, điện nước của một cửa hàng; chấp nhận mất phí để tiếp tục mở cửa kinh doanh.
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="box-quote">
+        <p>“Quản trị tiền giúp giảm căng thẳng, gia tăng sự tự tin và là con đường ngắn nhất, chắc chắn nhất dẫn đến lợi nhuận thực tế.”</p>
+        <div class="quote-author">— Bennett A. McDowell</div>
+      </div>
+
+      <div class="box-pitfall">
+        <h3>⚠️ Sai lầm & Cạm bẫy cần tránh (Pitfalls)</h3>
+        <p><strong>Cái tôi (Ego) thông minh hơn thị trường:</strong> Khi giá đi ngược hướng, cái tôi từ chối chấp nhận mình sai. Trader tự ý dời xa Stop Loss hoặc hủy bỏ lệnh dừng lỗ, chuyển từ một nhà giao dịch lướt sóng có kỷ luật thành một nhà đầu tư dài hạn bất đắc dĩ trong trạng thái hy vọng hão huyền.</p>
+      </div>
+
+      <div class="accordion-wrap">
+        <div class="accordion-header">
+          <span class="accordion-title">📖 Ví dụ thực tế trong sách: Thảm họa $32,000 từ cổ phiếu AMAT do "Hy Vọng"</span>
+          <span class="accordion-icon">▼</span>
+        </div>
+        <div class="accordion-content">
+          <p><strong>Case AMAT (Applied Materials):</strong> Tác giả thực hiện lệnh Short cổ phiếu AMAT dựa trên một mô hình dự báo phân tích kỹ thuật. Thay vì đi xuống, AMAT đảo chiều tăng vọt với động lượng cực mạnh.</p>
+          <p>Khi khoản lỗ chạm mức $25,000, Bennett rơi vào trạng thái <em>tê liệt vì sợ hãi (Paralyzed)</em>. Thay vì cắt lỗ theo đúng nguyên tắc hệ thống, ông bắt đầu cầu nguyện và bấu víu vào hy vọng giá sẽ quay đầu. Cuối cùng, ông buộc phải cắt lỗ trong hoảng loạn khi khoản âm lên tới $30,000. Tệ hại hơn, do cái tôi bị tổn thương sâu sắc, ông lập tức thực hiện một lệnh trả thù thị trường (Revenge trade) và mất thêm $2,000 nữa.</p>
+          <p><strong>Bài học xương máu:</strong> Hy vọng là chất độc nguy hiểm nhất của trader. Thị trường không quan tâm bạn hy vọng điều gì; nó chỉ vận động theo thực tại giá.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- ==================== PHẦN 2 ==================== -->
+    <article class="pillar-card" id="pillar-2">
+      <div class="pillar-header">
+        <div class="pillar-badge">2</div>
+        <div class="pillar-title-wrap">
+          <h2>"The Trader’s Mindset" — Trạng Thái Tĩnh Tại & 20 Đặc Điểm Vô Địch</h2>
+          <div class="sub">Đạt tới trạng thái "Nirvana" · Loại bỏ cảm xúc hỷ nộ · Bộ 20 phẩm chất tâm lý của nhà giao dịch chuyên nghiệp</div>
+        </div>
+      </div>
+
+      <div class="box-takeaway">
+        <h3>💡 Ý tưởng cốt lõi (Core Concept)</h3>
+        <p>Trạng thái <strong>Nirvana (Niết bàn trong giao dịch)</strong> không phải là thần bí hay tâm linh, mà là trạng thái tâm lý đạt đến sự tĩnh lặng tuyệt đối, nơi mà tâm trí trader không còn bị rung lắc hay chi phối bởi kết quả của từng lệnh riêng lẻ. Một lệnh thắng không tạo ra sự phấn khích ngạo mạn; một lệnh thua không gây ra sự cay cú hay dằn vặt.</p>
+        <p>Dưới đây là <strong>20 đặc điểm tư duy của nhà giao dịch thành công bền vững</strong> được đúc kết:</p>
+        
+        <div class="traits-grid">
+          <div class="trait-item">Không quá bận tâm vào số tiền từng lệnh</div>
+          <div class="trait-item">Chấp nhận rủi ro hoàn toàn trước khi bấm nút</div>
+          <div class="trait-item">Đối xử với lệnh thắng & thua bình đẳng</div>
+          <div class="trait-item">Tận hưởng quy trình như công việc nghiêm túc</div>
+          <div class="trait-item">Tuyệt đối không cảm thấy mình là nạn nhân</div>
+          <div class="trait-item">Luôn tìm cách nâng cấp kỹ năng giao dịch</div>
+          <div class="trait-item">Tài khoản tăng dần như hệ quả của kỹ năng</div>
+          <div class="trait-item">Giữ tâm trí cởi mở, không thành kiến</div>
+          <div class="trait-item">Không bao giờ giận dữ hay oán trách thị trường</div>
+          <div class="trait-item">Rút ra bài học đắt giá từ mọi kết quả</div>
+          <div class="trait-item">Tuân thủ một hệ thống cố định (Fixed System)</div>
+          <div class="trait-item">Không có nhu cầu kiểm soát hay khuất phục thị trường</div>
+          <div class="trait-item">Tự tin kiểm soát 100% hành vi của bản thân</div>
+          <div class="trait-item">Cảm giác không cưỡng ép thị trường (Not forcing)</div>
+          <div class="trait-item">Chỉ giao dịch bằng nguồn vốn rủi ro (Risk Capital)</div>
+          <div class="trait-item">Chịu trách nhiệm 100% về mọi quyết định</div>
+          <div class="trait-item">Duy trì sự tĩnh lặng tuyệt đối trong phiên</div>
+          <div class="trait-item">Tập trung hoàn toàn vào thực tại hiện tại</div>
+          <div class="trait-item">Không quan tâm hướng đi, chỉ đi cùng xu hướng</div>
+          <div class="trait-item">Hòa mình và trôi theo dòng chảy của thị trường</div>
+        </div>
+      </div>
+
+      <div class="box-action">
+        <h3>✅ Hành động áp dụng ngay (Action Steps)</h3>
+        <ul class="action-checklist">
+          <li class="action-item">
+            <input type="checkbox" id="act-2-1" class="chk-task">
+            <label class="action-text" for="act-2-1">
+              <strong>Áp dụng bài kiểm tra "Tự soi gương" (Mirroring):</strong> Trước khi mở lệnh, tự nhìn vào gương hoặc tự hỏi: <em>"Tâm trạng tôi đang bình thản hay đang có sự phấn khích/lo lắng?"</em>. Nếu có xao động, lập tức dừng lại.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-2-2" class="chk-task">
+            <label class="action-text" for="act-2-2">
+              <strong>Tách bạch tiền sinh hoạt và vốn rủi ro:</strong> Đảm bảo 100% số tiền trong tài khoản giao dịch là khoản tiền nếu mất trắng cũng không ảnh hưởng đến tiền nhà, tiền ăn hay cuộc sống gia đình.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-2-3" class="chk-task">
+            <label class="action-text" for="act-2-3">
+              <strong>Đánh giá hiệu suất theo chuỗi 30-50 lệnh:</strong> Không bao giờ phán xét hệ thống dựa trên 1 hay 3 lệnh thua liên tiếp; chỉ đánh giá kết quả trên một mẫu thử xác suất đủ lớn.
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="box-quote">
+        <p>“Nỗ lực kiểm soát thị trường là điều hoàn toàn vô vọng; sự kiểm soát duy nhất có ý nghĩa trong sự nghiệp giao dịch là kiểm soát chính bản thân bạn.”</p>
+        <div class="quote-author">— Bennett A. McDowell</div>
+      </div>
+
+      <div class="box-pitfall">
+        <h3>⚠️ Sai lầm & Cạm bẫy cần tránh (Pitfalls)</h3>
+        <p><strong>Ảo tưởng quyền lực sau chuỗi thắng:</strong> Khi gặp may mắn có được chuỗi thắng liên tiếp, trader dễ ngộ nhận rằng mình đã giải mã được thị trường. Sự tự phụ này thúc đẩy trader tăng đòn bẩy gấp 3-5 lần, và chỉ cần 1 cú đảo chiều là quét sạch toàn bộ lợi nhuận đã tích lũy trong nhiều tháng.</p>
+      </div>
+
+      <div class="accordion-wrap">
+        <div class="accordion-header">
+          <span class="accordion-title">📖 Ví dụ thực tế trong sách: Trạng thái "Nirvana" và sự bình đẳng cảm xúc</span>
+          <span class="accordion-icon">▼</span>
+        </div>
+        <div class="accordion-content">
+          <p>Tác giả kể về quá trình chuyển biến tâm lý từ những năm đầu làm môi giới chứng khoán cho đến khi trở thành nhà giao dịch độc lập toàn thời gian. Ban đầu, mỗi nhịp nhảy của bảng điện tử khiến huyết áp và nhịp tim của ông dao động dữ dội.</p>
+          <p>Chỉ khi ông xây dựng hoàn chỉnh Hệ thống ART kết hợp với quy tắc 2% Money Management, ông mới đạt được sự tĩnh lặng: bước vào bàn làm việc như một người thợ thủ công, thực thi tín hiệu một cách khách quan không cảm xúc, và rời bàn làm việc mà không mang theo bất kỳ sự dằn vặt nào.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- ==================== PHẦN 3 ==================== -->
+    <article class="pillar-card" id="pillar-3">
+      <div class="pillar-header">
+        <div class="pillar-badge">3</div>
+        <div class="pillar-title-wrap">
+          <h2>Nhận Diện 15 Rào Cản Tâm Lý Phá Hủy & Bẫy Phủ Nhận Hiệu Suất</h2>
+          <div class="sub">Hội chứng sợ dừng lỗ · Chốt lời non · Trung bình giá xuống (Doubling Down) · Phủ nhận hiệu suất (Performance Denial)</div>
+        </div>
+      </div>
+
+      <div class="box-takeaway">
+        <h3>💡 Ý tưởng cốt lõi (Core Concept)</h3>
+        <p>Hầu hết các thất bại trên thị trường không xuất phát từ việc thiếu kiến thức phân tích kỹ thuật, mà do <strong>các rào cản tâm lý phá hủy tiềm ẩn</strong>:</p>
+        <ol>
+          <li><strong>Sợ dừng lỗ (Fear of taking a loss):</strong> Coi lệnh thua là sự thất bại của nhân cách cá nhân. Nỗi sợ này khiến trader tê liệt và để khoản lỗ nhỏ biến thành thảm họa tài chính.</li>
+          <li><strong>Chốt lời non do lo âu (Premature profit taking):</strong> Nhu cầu được thỏa mãn tức thời (Instant Gratification) khiến trader cắt lợi nhuận quá sớm khi giá vừa chớm xanh, làm phá vỡ tỷ lệ Lợi nhuận/Rủi ro (Payoff Ratio).</li>
+          <li><strong>Giao dịch bằng tiền "không thể mất":</strong> Áp lực cơm áo gạo tiền tạo ra sự sợ hãi tột cùng, khiến não bộ rơi vào trạng thái hoảng loạn sinh học và đưa ra quyết định sai lầm.</li>
+          <li><strong>Gồng lỗ và Trung bình giá xuống (Doubling down):</strong> Hành vi trả thù thị trường tồi tệ nhất. Trader cố gắng chứng minh mình đúng bằng cách nhồi thêm khối lượng khi vị thế đang thua lỗ nặng.</li>
+          <li><strong>Giao dịch cưỡng bức (Compulsive Trading / Overtrading):</strong> Cơn nghiện adrenaline khiến trader không chịu ngồi yên, liên tục vào lệnh bất chấp không có tín hiệu hợp lệ từ hệ thống.</li>
+        </ol>
+        <p><strong>Bẫy Phủ Nhận Hiệu Suất (Performance Denial):</strong> Hiện tượng trader cố tình không ghi chép nhật ký, không dám nhìn lại số dư tài khoản thực tế và tự lừa dối mình rằng <em>"chỉ cần một lệnh thắng lớn là sẽ gỡ lại hết"</em>. Đây là con đường tự sát tài chính nhanh nhất.</p>
+      </div>
+
+      <div class="box-action">
+        <h3>✅ Hành động áp dụng ngay (Action Steps)</h3>
+        <ul class="action-checklist">
+          <li class="action-item">
+            <input type="checkbox" id="act-3-1" class="chk-task">
+            <label class="action-text" for="act-3-1">
+              <strong>Kỷ luật ghi chép Nhật ký giao dịch 100%:</strong> Ghi lại mọi thông số: Lý do vào lệnh, Tỷ lệ R:R, Cảm xúc trước và sau khi đóng vị thế, và lỗi sai phạm phải.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-3-2" class="chk-task">
+            <label class="action-text" for="act-3-2">
+              <strong>Cấm tuyệt đối hành vi nhồi lệnh khi đang lỗ:</strong> Chỉ được phép gia tăng khối lượng (Pyramiding) khi vị thế ban đầu đã có lãi và Stop Loss đã được dời về bảo toàn vốn.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-3-3" class="chk-task">
+            <label class="action-text" for="act-3-3">
+              <strong>Sử dụng Trailing Stop để khắc phục chốt lời non:</strong> Đặt lệnh Trailing Stop theo cấu trúc giá để thị trường tự quyết định điểm kết thúc của con sóng lợi nhuận.
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="box-quote">
+        <p>“Nhật ký giao dịch là chiếc gương chân thực duy nhất giúp bạn đối diện với sự thật trần trụi của hiệu suất, loại bỏ hoàn toàn bẫy phủ nhận tâm lý.”</p>
+        <div class="quote-author">— Bennett A. McDowell</div>
+      </div>
+
+      <div class="box-pitfall">
+        <h3>⚠️ Sai lầm & Cạm bẫy cần tránh (Pitfalls)</h3>
+        <p><strong>Ngụy biện "Giá rẻ thế này không thể giảm thêm":</strong> Không có đáy nào là tuyệt đối trên thị trường tài chính. Một cổ phiếu giảm từ $100 về $10 vẫn hoàn toàn có thể giảm thêm 90% nữa để về $1 hoặc phá sản về 0.</p>
+      </div>
+
+      <div class="accordion-wrap">
+        <div class="accordion-header">
+          <span class="accordion-title">📖 Ví dụ thực tế trong sách: Bài học mất trắng $22,500 từ Cổ phiếu Penny và bẫy "Giá Rẻ"</span>
+          <span class="accordion-icon">▼</span>
+        </div>
+        <div class="accordion-content">
+          <p><strong>Case Cổ phiếu Penny:</strong> Bennett mua 30,000 cổ phiếu một công ty vốn hóa nhỏ ở mức giá chỉ $0.75 (tổng giá trị đầu tư là $22,500) với suy nghĩ ngây thơ: <em>"Cổ phiếu này đã giảm quá sâu, giá quá rẻ rồi nên không thể giảm thêm được nữa."</em></p>
+          <p>Tuy nhiên, tin tức tiêu cực ập đến, thanh khoản của cổ phiếu bốc hơi hoàn toàn (Rủi ro thanh khoản - Liquidity Risk). Không có bất kỳ ai đặt lệnh mua đối ứng ở cột BID. Ông muốn bán cắt lỗ cũng không thể khớp lệnh. Cuối cùng, công ty nộp đơn phá sản và cổ phiếu rơi về con số 0 tròn trĩnh, Bennett mất trắng toàn bộ $22,500 vốn liếng.</p>
+          <p><strong>Bài học:</strong> Không bao giờ giao dịch ở thị trường thiếu thanh khoản và không bao giờ có ngoại lệ cho bất kỳ mức giá "rẻ" nào trong một hệ thống quản trị tiền nghiêm ngặt.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- ==================== PHẦN 4 ==================== -->
+    <article class="pillar-card" id="pillar-4">
+      <div class="pillar-header">
+        <div class="pillar-badge">4</div>
+        <div class="pillar-title-wrap">
+          <h2>Triết Lý Âm Dương (Yin & Yang) Trong Quản Trị Rủi Ro</h2>
+          <div class="sub">Hài hòa giữa Nhu và Cương · Sức mạnh của Nước trước Lửa · Đạt sự cân bằng động trong giao dịch</div>
+        </div>
+      </div>
+
+      <div class="box-takeaway">
+        <h3>💡 Ý tưởng cốt lõi (Core Concept)</h3>
+        <p>Thành công bền vững trong giao dịch không đến từ sự độc tôn của một thái cực cứng nhắc mà đến từ <strong>sự hài hòa giữa Âm (Yin) và Dương (Yang)</strong>:</p>
+        <ul>
+          <li><em>Thị trường có:</em> Xu hướng tăng (Bull/Yang) và Xu hướng giảm (Bear/Yin).</li>
+          <li><em>Tâm lý trader có:</em> Tham vọng, xông xáo (Yang) và Nỗi sợ, thận trọng (Yin).</li>
+        </ul>
+        <p><strong>Sức mạnh của tính Yin (Nhu thuận):</strong> Trong giao dịch, tính Yin (nhu hòa, thuận theo, kiên nhẫn chờ đợi) luôn có sức mạnh áp đảo tính Yang (cứng đầu, hung hăng, đối đầu thị trường). Thực tế chứng minh phụ nữ thường giao dịch có kỷ luật và tỷ suất sinh lời ổn định hơn nam giới nhờ khả năng thuận theo dòng chảy của thị trường thay vì cố gắng dùng sức mạnh cơ bắp để chinh phục bảng điện. Hãy nhớ: <strong>Nước (Yin) luôn có thể dập tắt Lửa (Yang)</strong>.</p>
+        
+        <p><strong>Cặp đối xứng cân bằng cần thiết lập:</strong></p>
+        <ul>
+          <li>Kỷ luật thép của hệ thống (Yang) $\leftrightarrow$ Sự linh hoạt chấp nhận thực tại giá (Yin).</li>
+          <li>Sự tự tin vào kế hoạch (Yang) $\leftrightarrow$ Nỗi sợ lành mạnh để luôn đặt Stop Loss (Yin).</li>
+          <li>Phân tích logic toán học (Yang) $\leftrightarrow$ Trực giác và sự nhạy cảm dòng tiền (Yin).</li>
+        </ul>
+      </div>
+
+      <div class="box-action">
+        <h3>✅ Hành động áp dụng ngay (Action Steps)</h3>
+        <ul class="action-checklist">
+          <li class="action-item">
+            <input type="checkbox" id="act-4-1" class="chk-task">
+            <label class="action-text" for="act-4-1">
+              <strong>Chuyển hóa nỗi sợ thành năng lực chuẩn bị:</strong> Đừng cố loại bỏ nỗi sợ; hãy dùng nỗi sợ bị thua lỗ để ép bản thân tính toán khối lượng vị thế cẩn trọng nhất có thể.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-4-2" class="chk-task">
+            <label class="action-text" for="act-4-2">
+              <strong>Trôi theo dòng chảy (Flow with the market):</strong> Ngừng dự báo đỉnh/đáy; khi thị trường bộc lộ xu hướng, lập tức uốn mình như dòng nước đi theo hướng cản ít nhất.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-4-3" class="chk-task">
+            <label class="action-text" for="act-4-3">
+              <strong>Thiết lập thời gian nghỉ ngơi cân bằng:</strong> Rời khỏi màn hình máy tính sau các phiên giao dịch căng thẳng, đi bộ hoặc tập thở để tái tạo nguồn năng lượng điềm tĩnh.
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="box-quote">
+        <p>“Hãy mềm mại và uyển chuyển như nước. Nước không bao giờ cố chiến đấu với tảng đá; nó uốn mình trôi quanh tảng đá và cuối cùng bào mòn cả khối đá khổng lồ.”</p>
+        <div class="quote-author">— Bennett A. McDowell</div>
+      </div>
+
+      <div class="box-pitfall">
+        <h3>⚠️ Sai lầm & Cạm bẫy cần tránh (Pitfalls)</h3>
+        <p><strong>Cực đoan hóa tính Yang:</strong> Đem tư duy chiến binh đối kháng hung hãn vào thị trường tài chính. Thị trường là vô hạn và không có cảm xúc; nếu bạn cố tình đối đầu và muốn "trừng phạt" thị trường, nó sẽ trừng phạt tài khoản của bạn trước tiên.</p>
+      </div>
+
+      <div class="accordion-wrap">
+        <div class="accordion-header">
+          <span class="accordion-title">📖 Ví dụ thực tế trong sách: Quy trình điều chỉnh tâm lý 3 bước</span>
+          <span class="accordion-icon">▼</span>
+        </div>
+        <div class="accordion-content">
+          <p>Mỗi khi phát hiện bản thân rơi vào một trong 15 rào cản tâm lý phá hủy, McDowell yêu cầu áp dụng ngay <strong>Quy trình can thiệp khẩn cấp 3 bước</strong>:</p>
+          <p><strong>Bước 1 - Nhận diện (Awareness):</strong> Gọi đúng tên cảm xúc đang xâm chiếm tâm trí (ví dụ: "Tôi đang tức giận vì lệnh vừa rồi bị dính Stop Loss").</p>
+          <p><strong>Bước 2 - Thừa nhận trách nhiệm (Accountability):</strong> Tự nhắc nhở bản thân rằng thị trường không có lỗi, mình là người duy nhất bấm nút và chịu trách nhiệm 100%.</p>
+          <p><strong>Bước 3 - Rút lui chiến thuật (Action):</strong> Đóng máy tính, đứng dậy đi ra ngoài ít nhất 30 phút để nạp lại trạng thái cân bằng Yin-Yang trước khi quay lại thị trường.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- ==================== PHẦN 5: MA TRẬN HÀNH ĐỘNG TỔNG HỢP ==================== -->
+    <section class="matrix-section">
+      <div class="matrix-title">
+        <span>⚡</span>
+        <span>Ma Trận Xử Lý Khủng Hoảng Cảm Xúc & Hành Động Khắc Phục Tức Thì</span>
+      </div>
+      <p style="color: var(--text-soft); font-size: 0.95rem; margin-bottom: 14px;">
+        Bảng tra cứu nhanh nguyên nhân gốc rễ và hành động can thiệp tức thì khi tâm lý bị dao động:
+      </p>
+
+      <div class="table-container">
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th>Trạng thái Cảm xúc / Hành vi</th>
+              <th>Nguyên nhân gốc rễ</th>
+              <th>Hành động khắc phục ngay lập tức</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Muốn gồng lỗ / Gỡ lỗ</strong></td>
+              <td>Cái tôi bị tổn thương; Phủ nhận thực tại thua lỗ.</td>
+              <td>Dừng giao dịch ngay. Đóng vị thế bằng lệnh thị trường và xem lại quy tắc dừng lỗ 2%.</td>
+            </tr>
+            <tr>
+              <td><strong>Sợ vào lệnh (Paralysis)</strong></td>
+              <td>Nỗi sợ thua lỗ quá lớn; Thiếu hụt vốn rủi ro thực tế.</td>
+              <td>Giảm khối lượng vị thế (Trade Size) xuống mức tối thiểu để tái xây dựng sự tự tin.</td>
+            </tr>
+            <tr>
+              <td><strong>Quá phấn khích sau khi thắng</strong></td>
+              <td>Tự phụ; Ảo tưởng mình có khả năng kiểm soát thị trường.</td>
+              <td>Rời khỏi màn hình. Tự nhắc lại nguyên tắc xác suất ngẫu nhiên của chuỗi lệnh.</td>
+            </tr>
+            <tr>
+              <td><strong>Chốt lời quá sớm (Chốt non)</strong></td>
+              <td>Lo âu mất lãi; Cần cảm giác thỏa mãn tức thời.</td>
+              <td>Kích hoạt lệnh Trailing Stop tự động để loại bỏ sự can thiệp của cảm xúc cá nhân.</td>
+            </tr>
+            <tr>
+              <td><strong>Giao dịch liên tục (Overtrading)</strong></td>
+              <td>Nghiện cảm giác adrenaline; Muốn trả thù thị trường.</td>
+              <td>Tắt máy tính. Thực hiện các hoạt động thể chất hoặc tập thở để khôi phục cân bằng Âm Dương.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© Tóm tắt báo cáo chuyên sâu <strong>A Trader’s Money Management System</strong> — Bennett A. McDowell.</p>
+    <p style="margin-top: 6px; font-size: 0.8rem;">Giao diện Web Tương Tác chuẩn Front-end cho Nhà Đầu Tư & Quản Trị Quỹ.</p>
+  </footer>
+
+  <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Reading Progress Bar
+      const progressBar = document.getElementById('progress-bar');
+      window.addEventListener('scroll', () => {
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+        progressBar.style.width = progress + '%';
+      });
+
+      // 2. Dark / Light Mode Toggle with LocalStorage
+      const themeToggleBtn = document.getElementById('theme-toggle');
+      const themeIcon = document.getElementById('theme-icon');
+      const themeText = document.getElementById('theme-text');
+      const htmlEl = document.documentElement;
+
+      const savedTheme = localStorage.getItem('mm_theme') || 'dark';
+      setTheme(savedTheme);
+
+      themeToggleBtn.addEventListener('click', () => {
+        const currentTheme = htmlEl.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        setTheme(newTheme);
+      });
+
+      function setTheme(theme) {
+        htmlEl.setAttribute('data-theme', theme);
+        localStorage.setItem('mm_theme', theme);
+        if (theme === 'light') {
+          themeIcon.textContent = '🌙';
+          themeText.textContent = 'Chế độ tối';
+        } else {
+          themeIcon.textContent = '☀️';
+          themeText.textContent = 'Chế độ sáng';
+        }
+      }
+
+      // 3. Action Checkboxes with LocalStorage & Progress Counter
+      const checkboxes = document.querySelectorAll('.chk-task');
+      const taskCounter = document.getElementById('task-counter');
+      const totalTasks = checkboxes.length;
+
+      // Load saved checkboxes state
+      const savedTasks = JSON.parse(localStorage.getItem('mm_tasks') || '[]');
+      savedTasks.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.checked = true;
+      });
+      updateCounter();
+
+      checkboxes.forEach(chk => {
+        chk.addEventListener('change', () => {
+          const completedIds = Array.from(checkboxes)
+            .filter(c => c.checked)
+            .map(c => c.id);
+          localStorage.setItem('mm_tasks', JSON.stringify(completedIds));
+          updateCounter();
+        });
+      });
+
+      function updateCounter() {
+        const completedCount = document.querySelectorAll('.chk-task:checked').length;
+        taskCounter.textContent = `Đã hoàn thành: ${completedCount}/${totalTasks} bài tập`;
+        if (completedCount === totalTasks) {
+          taskCounter.style.color = 'var(--accent-gold)';
+          taskCounter.textContent = `🎉 Đạt trạng thái Nirvana! (12/12 bài tập)`;
+        } else {
+          taskCounter.style.color = 'var(--accent-green)';
+        }
+      }
+
+      // 4. Accordion Toggle
+      const accordions = document.querySelectorAll('.accordion-wrap');
+      accordions.forEach(acc => {
+        const header = acc.querySelector('.accordion-header');
+        header.addEventListener('click', () => {
+          acc.classList.toggle('active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

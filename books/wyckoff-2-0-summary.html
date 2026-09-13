@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tóm Tắt Chuyên Sâu: Wyckoff 2.0 — Rubén Villahermosa Chaves</title>
+  <style>
+    /* ==========================================================================
+       CSS VARIABLES & THEMES (DARK & LIGHT)
+       ========================================================================== */
+    :root {
+      --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+      
+      /* Dark Theme (Default) */
+      --bg-body: #0b1120;
+      --bg-card: #151f32;
+      --bg-card-sub: #1e293b;
+      --bg-glass: rgba(21, 31, 50, 0.88);
+      --border-color: #27354f;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-soft: #cbd5e1;
+
+      /* Accents */
+      --accent-gold: #f59e0b;
+      --accent-gold-bg: rgba(245, 158, 11, 0.08);
+      --accent-gold-border: rgba(245, 158, 11, 0.35);
+
+      --accent-green: #10b981;
+      --accent-green-bg: rgba(16, 185, 129, 0.08);
+      --accent-green-border: rgba(16, 185, 129, 0.35);
+
+      --accent-red: #ef4444;
+      --accent-red-bg: rgba(239, 68, 68, 0.08);
+      --accent-red-border: rgba(239, 68, 68, 0.35);
+
+      --accent-blue: #3b82f6;
+      --accent-blue-bg: rgba(59, 130, 246, 0.08);
+      --accent-blue-border: rgba(59, 130, 246, 0.35);
+
+      --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.25);
+      --shadow-md: 0 12px 28px rgba(0, 0, 0, 0.35);
+      --radius: 12px;
+      --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-body: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-card-sub: #f1f5f9;
+      --bg-glass: rgba(255, 255, 255, 0.92);
+      --border-color: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-soft: #334155;
+
+      --accent-gold-bg: #fffbeb;
+      --accent-gold-border: #fcd34d;
+
+      --accent-green-bg: #ecfdf5;
+      --accent-green-border: #6ee7b7;
+
+      --accent-red-bg: #fef2f2;
+      --accent-red-border: #fca5a5;
+
+      --accent-blue-bg: #eff6ff;
+      --accent-blue-border: #93c5fd;
+
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 10px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    /* ==========================================================================
+       RESET & BASE STYLES
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      line-height: 1.75;
+      font-size: 16px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Reading Progress Bar */
+    #progress-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: transparent;
+      z-index: 1000;
+    }
+
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-gold), var(--accent-green), var(--accent-blue));
+      transition: width 0.1s ease-out;
+    }
+
+    /* Top Sticky Bar */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 900;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: var(--bg-glass);
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: var(--transition);
+    }
+
+    .brand-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .controls-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .task-counter-badge {
+      font-size: 0.82rem;
+      font-weight: 600;
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-color);
+      padding: 4px 14px;
+      border-radius: 999px;
+      color: var(--accent-green);
+      white-space: nowrap;
+    }
+
+    .theme-toggle-btn {
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition);
+    }
+
+    .theme-toggle-btn:hover {
+      border-color: var(--accent-gold);
+      transform: translateY(-1px);
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 36px 20px 80px;
+    }
+
+    /* ==========================================================================
+       HERO BOOK HEADER
+       ========================================================================== */
+    .hero-book {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.98) 100%);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 40px 32px;
+      margin-bottom: 44px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+
+    [data-theme="light"] .hero-book {
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    }
+
+    .hero-book::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent-gold), var(--accent-blue));
+    }
+
+    .book-tag {
+      display: inline-block;
+      padding: 4px 14px;
+      background: var(--accent-gold-bg);
+      border: 1px solid var(--accent-gold-border);
+      color: var(--accent-gold);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+
+    .hero-book h1 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      line-height: 1.25;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    .hero-book .author {
+      font-size: 1.1rem;
+      color: var(--accent-blue);
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+      padding: 18px 0;
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .meta-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      margin-bottom: 3px;
+    }
+
+    .meta-val {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-soft);
+    }
+
+    .context-box {
+      margin-top: 18px;
+      font-size: 0.95rem;
+      color: var(--text-soft);
+      line-height: 1.7;
+    }
+
+    .one-liner {
+      background: var(--accent-gold-bg);
+      border-left: 4px solid var(--accent-gold);
+      padding: 16px 20px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-style: italic;
+      color: var(--text-main);
+      font-size: 1.05rem;
+      margin-top: 18px;
+    }
+
+    /* ==========================================================================
+       PILLAR MODULES
+       ========================================================================== */
+    .pillar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 34px 28px;
+      margin-bottom: 44px;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+
+    .pillar-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .pillar-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .pillar-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-gold), #d97706);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 800;
+      flex-shrink: 0;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
+    }
+
+    .pillar-title-wrap h2 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--text-main);
+    }
+
+    .pillar-title-wrap .sub {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ==========================================================================
+       SPECIALIZED BLOCKS
+       ========================================================================== */
+    
+    /* 1. Core Concept (Gold) */
+    .box-takeaway {
+      background: var(--accent-gold-bg);
+      border: 1px solid var(--accent-gold-border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin-bottom: 22px;
+    }
+
+    .box-takeaway h3 {
+      color: var(--accent-gold);
+      font-size: 1.08rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .box-takeaway p {
+      color: var(--text-soft);
+      font-size: 0.98rem;
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+
+    .box-takeaway p:last-child {
+      margin-bottom: 0;
+    }
+
+    .box-takeaway ul {
+      margin-left: 20px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+      color: var(--text-soft);
+    }
+
+    .box-takeaway li {
+      margin-bottom: 6px;
+    }
+
+    /* 2. Action Steps (Green Checklist) */
+    .box-action {
+      background: var(--accent-green-bg);
+      border: 1px solid var(--accent-green-border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin-bottom: 22px;
+    }
+
+    .box-action h3 {
+      color: var(--accent-green);
+      font-size: 1.08rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .action-checklist {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .action-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .action-item input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--accent-green);
+      border-radius: 6px;
+      outline: none;
+      background: var(--bg-card);
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+      margin-top: 3px;
+      transition: var(--transition);
+    }
+
+    .action-item input[type="checkbox"]:checked {
+      background: var(--accent-green);
+    }
+
+    .action-item input[type="checkbox"]:checked::after {
+      content: "✓";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .action-text {
+      color: var(--text-soft);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      transition: var(--transition);
+    }
+
+    .action-item input[type="checkbox"]:checked ~ .action-text {
+      text-decoration: line-through;
+      opacity: 0.55;
+    }
+
+    /* 3. Quote Card (Blue with thick left border) */
+    .box-quote {
+      background: var(--accent-blue-bg);
+      border: 1px solid var(--accent-blue-border);
+      border-left: 6px solid var(--accent-blue);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 18px 24px;
+      margin-bottom: 22px;
+    }
+
+    .box-quote p {
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--text-main);
+      line-height: 1.65;
+    }
+
+    .box-quote .quote-author {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-blue);
+      text-align: right;
+      margin-top: 8px;
+      font-style: normal;
+    }
+
+    /* 4. Pitfalls (Red) */
+    .box-pitfall {
+      background: var(--accent-red-bg);
+      border: 1px solid var(--accent-red-border);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      margin-bottom: 22px;
+    }
+
+    .box-pitfall h3 {
+      color: var(--accent-red);
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .box-pitfall p {
+      color: var(--text-soft);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
+
+    .box-pitfall p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ==========================================================================
+       ACCORDION: CASE STUDIES
+       ========================================================================== */
+    .accordion-wrap {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--bg-card-sub);
+      margin-top: 14px;
+    }
+
+    .accordion-header {
+      padding: 14px 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: transparent;
+      user-select: none;
+      transition: background 0.2s ease;
+    }
+
+    .accordion-header:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    [data-theme="light"] .accordion-header:hover {
+      background: rgba(0, 0, 0, 0.02);
+    }
+
+    .accordion-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .accordion-icon {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      transition: transform 0.3s ease;
+    }
+
+    .accordion-wrap.active .accordion-icon {
+      transform: rotate(180deg);
+      color: var(--accent-gold);
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0, 1, 0, 1);
+      padding: 0 20px;
+    }
+
+    .accordion-wrap.active .accordion-content {
+      max-height: 850px;
+      transition: max-height 0.4s ease-in-out;
+      padding: 18px 20px 22px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .accordion-content p {
+      font-size: 0.92rem;
+      color: var(--text-soft);
+      line-height: 1.68;
+      margin-bottom: 10px;
+    }
+
+    .accordion-content p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ==========================================================================
+       KEY TAKEAWAYS MATRIX (TABLE)
+       ========================================================================== */
+    .matrix-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 34px 28px;
+      margin-bottom: 44px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .matrix-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      color: var(--accent-gold);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      margin-top: 16px;
+    }
+
+    table.matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      text-align: left;
+    }
+
+    table.matrix-table th, table.matrix-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    table.matrix-table th {
+      background: var(--bg-card-sub);
+      color: var(--accent-gold);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+    }
+
+    table.matrix-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    [data-theme="light"] table.matrix-table tr:hover td {
+      background: rgba(0, 0, 0, 0.02);
+    }
+
+    table.matrix-table td strong {
+      color: var(--text-main);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    @media (max-width: 640px) {
+      .pillar-header {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .top-bar {
+        padding: 10px 16px;
+      }
+      .pillar-card {
+        padding: 22px 16px;
+      }
+      .hero-book {
+        padding: 26px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Reading Progress Bar -->
+  <div id="progress-container">
+    <div id="progress-bar"></div>
+  </div>
+
+  <!-- Sticky Top Utility Bar -->
+  <header class="top-bar">
+    <div class="brand-title">
+      <span>📊</span>
+      <span>Wyckoff 2.0 Masterclass</span>
+    </div>
+    <div class="controls-group">
+      <div class="task-counter-badge" id="task-counter">
+        Đã hoàn thành: 0/15 bài tập
+      </div>
+      <button class="theme-toggle-btn" id="theme-toggle">
+        <span id="theme-icon">☀️</span>
+        <span id="theme-text">Chế độ sáng</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ==================== HERO SECTION: BOOK OVERVIEW ==================== -->
+    <section class="hero-book">
+      <span class="book-tag">Phân Tích Cấu Trúc Khối Lượng & Dòng Lệnh Vi Mô</span>
+      <h1>Wyckoff 2.0: Structures, Volume Profile and Order Flow</h1>
+      <div class="author">Tác giả: Rubén Villahermosa Chaves (Xuất bản năm 2021)</div>
+      
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">Lĩnh vực cốt lõi</span>
+          <span class="meta-val">Auction Market Theory, Volume Profile & Order Flow</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Hệ thống phân tích</span>
+          <span class="meta-val">Wyckoff Hiện Đại + Dòng Lệnh Vi Mô + Đa Khung Thời Gian</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Thị trường ứng dụng</span>
+          <span class="meta-val">Futures, Cổ phiếu, Forex, Tiền mã hóa (Tài sản thanh khoản cao)</span>
+        </div>
+      </div>
+
+      <div class="context-box">
+        <strong>Bối cảnh & Mục đích cốt lõi:</strong> Thị trường thế kỷ 21 đã thay đổi bản chất: hơn 80-90% khối lượng giao dịch được thực thi tự động thông qua thuật toán máy tính, High-Frequency Trading (HFT) và thị trường ngầm Dark Pools. Cách tiếp cận Wyckoff cổ điển (dán nhãn máy móc các pha và sự kiện theo sách giáo khoa) thường thất bại trước các biến dạng thực tế. Mục đích của cuốn sách là nâng cấp phương pháp bằng cách kết hợp <em>tính logic về cấu trúc & chu kỳ</em> của Wyckoff với <em>tính khách quan khoa học</em> của Volume Profile (xác định chính xác vùng giá trị, VPOC, HVN/LVN) và <em>sự chuẩn xác tức thời</em> của Order Flow (Footprint, Delta, Hấp thụ & Chủ động) để tạo nên một kế hoạch giao dịch hoàn toàn khách quan.
+      </div>
+
+      <div class="one-liner">
+        "Thị trường tài chính là một cuộc đấu giá liên tục tìm kiếm sự hiệu quả; giá cả là công cụ khám phá cơ hội, thời gian quy định sự chấp nhận, còn khối lượng là bằng chứng xác thực giá trị. Mọi chiến thắng giao dịch đều bắt đầu từ việc đứng về phía dòng tiền tổ chức kiểm soát thị trường."
+      </div>
+    </section>
+
+    <!-- ==================== PHẦN 1: NÂNG CẤP TƯ DUY WYCKOFF ==================== -->
+    <article class="pillar-card" id="pillar-1">
+      <div class="pillar-header">
+        <div class="pillar-badge">1</div>
+        <div class="pillar-title-wrap">
+          <h2>Tư Duy Wyckoff 2.0 & Động Lực Học Cấu Trúc</h2>
+          <div class="sub">Vượt qua chiếc bẫy "Dán nhãn máy móc" · Thất bại cấu trúc (Structural Failure) · Thu hẹp lực đẩy (SOT) · Cấu trúc dốc</div>
+        </div>
+      </div>
+
+      <!-- Core Concept -->
+      <div class="box-takeaway">
+        <h3>💡 Ý tưởng cốt lõi (Core Concept)</h3>
+        <p><strong>1. Thoát khỏi bẫy dán nhãn (The Labeling Trap):</strong> Trong thực tế, không có hai cấu trúc nào giống hệt nhau. Rất nhiều trader thất bại vì cố gắng gượng ép dán nhãn từng cây nến thành SC, AR, ST theo sách giáo khoa. Điểm quan trọng nhất không phải là nhãn dán, mà là <strong>tính logic của hành động</strong>: Xu hướng cũ đã dừng lại chưa? Thị trường đã chuyển trạng thái từ có xu hướng sang đi ngang (Change of Character) chưa? Dòng tiền lớn có đang tích lũy hay phân phối?</p>
+        <p><strong>2. Thất bại cấu trúc (Structural Failure):</strong> Trong một khung giá (Range) hoặc kênh giá, khi giá vận động từ biên này sang biên kia theo quy luật, nếu giá <em>không thể chạm tới biên đối diện</em> mà quay đầu sớm, đó là tín hiệu của sự mất cân bằng sức mạnh:</p>
+        <ul>
+          <li><em>Thất bại cấu trúc yếu (Weakness):</em> Giá không thể vươn tới đỉnh trên của cấu trúc → Phe mua kiệt sức, phe bán bắt đầu áp đảo (dẫn đến hình thành LPSY).</li>
+          <li><em>Thất bại cấu trúc mạnh (Strength):</em> Giá không thể rơi xuống đáy dưới của cấu trúc → Phe mua nhảy vào chặn giá sớm, không cho giá giảm sâu hơn (dẫn đến hình thành LPS).</li>
+        </ul>
+        <p><strong>3. Thu hẹp lực đẩy (Shortening of the Thrust - SOT):</strong> Mẫu hình đo lường sự suy kiệt đà giá sau tối thiểu 3-4 nhịp sóng đẩy cùng hướng. Khoảng cách giữa các đỉnh mới (hoặc đáy mới) ngày càng ngắn lại. Nếu đi kèm khối lượng lớn, đó là sự phân kỳ nỗ lực/kết quả (nỗ lực lớn nhưng không đẩy được giá đi xa do có sự hấp thụ đối ứng).</p>
+        <p><strong>4. Cấu trúc dốc (Sloping Structures):</strong> Tích lũy không nhất thiết phải nằm ngang. Một cấu trúc tích lũy dốc lên (Upward Sloping) thể hiện sức mạnh nội tại cực kỳ hung hãn của phe mua (không để giá rơi vào vùng quá bán). Ngược lại, tích lũy dốc xuống (Bearish Sloping Accumulation) thể hiện phe mua kiên nhẫn hấp thụ nguồn cung đang tuôn ra ào ạt.</p>
+      </div>
+
+      <!-- Action Steps -->
+      <div class="box-action">
+        <h3>✅ Hành động áp dụng ngay (Action Steps)</h3>
+        <ul class="action-checklist">
+          <li class="action-item">
+            <input type="checkbox" id="act-1-1" class="chk-task">
+            <label class="action-text" for="act-1-1">
+              <strong>Đọc hành động, ngưng dán nhãn:</strong> Khi mở biểu đồ, chỉ tập trung xác định 2 đường biên (Creek & Ice) và quan sát phản ứng giá khi chạm biên thay vì cố gắng tìm nhãn hoàn hảo trong Phase A.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-1-2" class="chk-task">
+            <label class="action-text" for="act-1-2">
+              <strong>Đo lường khoảng cách các bước sóng (SOT):</strong> Dùng thước kẻ đo độ dài tịnh tiến của 3 nhịp đẩy liên tiếp; khi thấy bước sóng thứ 3 ngắn hơn rõ rệt kèm volume đột biến, chuẩn bị sẵn sàng cho kịch bản đảo chiều.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-1-3" class="chk-task">
+            <label class="action-text" for="act-1-3">
+              <strong>Đánh giá tính linh hoạt của kênh dốc:</strong> Vẽ kênh song song bao bọc ít nhất 4 điểm chạm của Phase A, B, C; xoay nghiêng góc nhìn trong tâm trí để nhận diện các pha Wyckoff tương tự như khung nằm ngang.
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Key Quote -->
+      <div class="box-quote">
+        <p>“Cấu trúc hoàn hảo theo sách giáo khoa chỉ là ảo ảnh hồi quy quá khứ. Trong thời gian thực, thị trường là một thực thể sống động; logic cơ bản quan trọng hơn hình thức: để giá tăng phải có tích lũy, để giá giảm phải có phân phối.”</p>
+        <div class="quote-author">— Rubén Villahermosa Chaves</div>
+      </div>
+
+      <!-- Pitfalls -->
+      <div class="box-pitfall">
+        <h3>⚠️ Sai lầm & Cạm bẫy cần tránh (Pitfalls)</h3>
+        <p><strong>Cố định kịch bản quá sớm trong Phase B:</strong> Khi thị trường đang ở Phase B (giai đoạn xây dựng nguyên nhân), nhiều trader vội vàng khẳng định đây là tích lũy hay phân phối. Đây là sai lầm chết người vì quyền kiểm soát liên tục thay đổi giữa các tổ chức. Hãy chỉ xác định thiên hướng khi có sự xuất hiện của Shakeout ở Phase C.</p>
+      </div>
+
+      <!-- Case Accordion -->
+      <div class="accordion-wrap">
+        <div class="accordion-header">
+          <span class="accordion-title">📖 Ví dụ thực tế trong sách: Tích lũy dốc lên của Bitcoin & Cấu trúc thất bại của FDAX</span>
+          <span class="accordion-icon">▼</span>
+        </div>
+        <div class="accordion-content">
+          <p><strong>Case Bitcoin (BTC):</strong> Sau một cú sụp đổ mạnh, Bitcoin không tạo đáy ngang mà liên tục tạo các đáy sau cao hơn đáy trước (Upward Sloping Accumulation). Khi giá chạm cận trên, nhiều người tưởng là UTAD và bán khống, nhưng giá từ chối rơi về đáy cấu trúc (Thất bại cấu trúc mạnh). Ngay sau đó là một cú rũ bỏ nội bộ (Internal Shakeout) tại Phase C và bùng nổ vượt đỉnh.</p>
+          <p><strong>Case FDAX:</strong> Cấu trúc bị khóa ở đáy nhưng đỉnh lại mở rộng dần. Các trader theo chủ nghĩa dán nhãn robot cố gán từng cây nến và liên tục bị dính Stop Loss. Tác giả nhấn mạnh: nếu cấu trúc quá dị biệt và không đem lại lợi thế rõ ràng, hãy loại bỏ tài sản đó khỏi danh mục theo dõi thay vì cố gắng giao dịch.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- ==================== PHẦN 2: LÝ THUYẾT ĐẤU GIÁ & CƠ CHẾ KHỚP LỆNH ==================== -->
+    <article class="pillar-card" id="pillar-2">
+      <div class="pillar-header">
+        <div class="pillar-badge">2</div>
+        <div class="pillar-title-wrap">
+          <h2>Lý Thuyết Đấu Giá (Auction Market Theory) & Cơ Chế Khớp Lệnh Vi Mô</h2>
+          <div class="sub">Công thức Giá Trị: Giá + Thời Gian + Khối Lượng · Cơ chế Khớp chéo Lệnh (Order Matching) · Vấn đề cốt tử của Order Flow</div>
+        </div>
+      </div>
+
+      <div class="box-takeaway">
+        <h3>💡 Ý tưởng cốt lõi (Core Concept)</h3>
+        <p><strong>1. Bản chất của thị trường tài chính là một cuộc đấu giá hai chiều:</strong> Mục tiêu tối thượng của thị trường là <em>tạo điều kiện thuận lợi cho giao dịch (Facilitate Negotiation)</em>. Thị trường liên tục luân chuyển qua 2 trạng thái: <strong>Cân bằng (Efficiency/Balance)</strong> và <strong>Mất cân bằng (Inefficiency/Imbalance)</strong>.</p>
+        <p style="text-align: center; font-family: var(--font-mono); color: var(--accent-gold); font-size: 1.1rem; padding: 8px 0;">
+          <strong>Price + Time + Volume = Value</strong>
+        </p>
+        <ul>
+          <li><em>Giá (Price):</em> Công cụ thăm dò và khám phá cơ hội mới.</li>
+          <li><em>Thời gian (Time):</em> Đo lường mức độ chấp nhận mức giá đó (giá lưu lại càng lâu = càng được chấp nhận).</li>
+          <li><em>Khối lượng (Volume):</em> Thước đo định lượng số lượng hợp đồng giao dịch, xác nhận sự đồng thuận về giá trị.</li>
+        </ul>
+        <p><strong>2. Cơ chế khớp lệnh chéo (Crossover Matching Engine):</strong> Giá không tăng vì "có nhiều người mua hơn người bán" (bởi vì số lượng giao dịch mua và bán luôn luôn bằng nhau). Giá di chuyển dựa trên <strong>thái độ của người tham gia</strong>:</p>
+        <ul>
+          <li><em>Lệnh thụ động (Passive Limit Orders):</em> Nằm chờ ở cột BID (mua giới hạn) và ASK (bán giới hạn) → Đóng vai trò cung cấp thanh khoản, có khả năng chặn đà giá nhưng <strong>không thể làm giá di chuyển</strong>.</li>
+          <li><em>Lệnh chủ động (Aggressive Market Orders):</em> Lệnh thị trường tấn công trực tiếp vào thanh khoản sẵn có ở Best BID / Best ASK → <strong>Động cơ duy nhất làm dịch chuyển giá</strong>.</li>
+        </ul>
+        <p><strong>3. Vấn đề cốt tử của Order Flow (The Order Flow Problem):</strong> Không phải mọi lệnh hiển thị ở ASK đều là lực đẩy mua lên, và không phải mọi lệnh ở BID đều là lực đẩy bán xuống. Một lệnh Buy Market có thể là lệnh vào mua mới (Long), nhưng cũng có thể chỉ là lệnh cắt lỗ (Stop Loss) của phe Short hoặc chốt lời (Take Profit). Việc phân tích Footprint đơn lẻ mà không có bối cảnh vĩ mô Wyckoff sẽ biến giao dịch thành trò may rủi 50/50.</p>
+      </div>
+
+      <div class="box-action">
+        <h3>✅ Hành động áp dụng ngay (Action Steps)</h3>
+        <ul class="action-checklist">
+          <li class="action-item">
+            <input type="checkbox" id="act-2-1" class="chk-task">
+            <label class="action-text" for="act-2-1">
+              <strong>Quan sát quy trình 3 bước đảo chiều:</strong> Xác định (1) Kiệt sức (Exhaustion) → (2) Hấp thụ (Absorption của lệnh Limit) → (3) Chủ động (Initiative của lệnh Market).
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-2-2" class="chk-task">
+            <label class="action-text" for="act-2-2">
+              <strong>Phát hiện Bẫy Lệnh Giả (Spoofing):</strong> Nhận diện các lệnh Limit cực lớn đột ngột xuất hiện ở DOM nhưng lập tức bị hủy khi giá vừa tiến sát đến gần.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-2-3" class="chk-task">
+            <label class="action-text" for="act-2-3">
+              <strong>Ưu tiên phân tích thị trường tập trung:</strong> Luôn lấy dữ liệu khối lượng từ sàn tập trung (như Hợp đồng tương lai CME - $6E, $ES) làm cơ sở tham chiếu chuẩn xác nhất.
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="box-quote">
+        <p>“Lệnh Limit tạo ra thanh khoản và đặt nền móng phòng thủ; nhưng chỉ có lệnh Market mang tính chủ động và cấp bách mới là động cơ thực sự đẩy thị trường bước vào xu hướng.”</p>
+        <div class="quote-author">— Rubén Villahermosa Chaves</div>
+      </div>
+
+      <div class="box-pitfall">
+        <h3>⚠️ Sai lầm & Cạm bẫy cần tránh (Pitfalls)</h3>
+        <p><strong>Hiểu lầm về phân kỳ Delta (Delta Divergence):</strong> Nghĩ rằng cứ thấy nến đỏ với Delta dương là giá sẽ đảo chiều tăng ngay. Delta dương trên nến giảm thực chất là do phe mua chủ động nhảy vào ăn lệnh nhưng bị một lệnh Bán Băng Chìm (Iceberg Sell Order) hấp thụ toàn bộ, sau đó phe bán chỉ cần một lực nhỏ đã đẩy giá sập tiếp.</p>
+      </div>
+
+      <div class="accordion-wrap">
+        <div class="accordion-header">
+          <span class="accordion-title">📖 Ví dụ thực tế trong sách: Cơ chế hoạt động của Lệnh Băng Chìm (Iceberg Order)</span>
+          <span class="accordion-icon">▼</span>
+        </div>
+        <div class="accordion-content">
+          <p><strong>Lệnh Băng Chìm (Iceberg Orders):</strong> Các tổ chức lớn muốn gom hoặc xả 5.000 hợp đồng nhưng không thể đặt thẳng vào sổ lệnh vì sẽ làm thị trường hoảng sợ chạy mất. Họ dùng thuật toán chia nhỏ thành các lô 50 hợp đồng hiển thị trên ASK. Mỗi khi 50 hợp đồng được người mua nhỏ lẻ khớp hết, tảng băng ngầm lại tự động bổ sung thêm 50 hợp đồng nữa ở đúng mức giá đó.</p>
+          <p>Trên Footprint, bạn sẽ thấy cột ASK khớp liên tục hàng nghìn hợp đồng mua chủ động cực lớn nhưng nến giá hoàn toàn không thể tăng lên được dù chỉ 1 tick — đó chính là dấu chân của sự <strong>Hấp thụ (Absorption)</strong>.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- ==================== PHẦN 3: VOLUME PROFILE ==================== -->
+    <article class="pillar-card" id="pillar-3">
+      <div class="pillar-header">
+        <div class="pillar-badge">3</div>
+        <div class="pillar-title-wrap">
+          <h2>Volume Profile — Khách Quan Hóa Vùng Giá Trị (Value Area)</h2>
+          <div class="sub">VPOC · VAH · VAL · Vùng thanh khoản cao (HVN) & Vùng thanh khoản thấp (LVN) · Mô hình chữ P và b</div>
+        </div>
+      </div>
+
+      <div class="box-takeaway">
+        <h3>💡 Ý tưởng cốt lõi (Core Concept)</h3>
+        <p><strong>1. Khác biệt giữa Khối lượng ngang và Khối lượng dọc:</strong> Khối lượng dọc (truyền thống) chỉ cho biết <em>KHI NÀO</em> giao dịch xảy ra. Volume Profile (khối lượng ngang) cho biết chính xác <em>Ở ĐÂU (Mức giá nào)</em> dòng tiền lớn tập trung trao tay nhiều nhất.</p>
+        <p><strong>2. Cấu trúc Vùng Giá Trị (Value Area - VA):</strong> Dựa trên đường cong phân phối chuẩn Gauss (Gaussian Bell), Vùng Giá Trị đại diện cho <strong>68.2% khối lượng giao dịch</strong> của phiên hoặc cấu trúc:</p>
+        <ul>
+          <li><em>VPOC (Volume Point of Control):</em> Mức giá có khối lượng khớp lệnh lớn nhất toàn profile — đại diện cho mức giá công bằng nhất (Fair Price) mà cả hai phe đồng thuận.</li>
+          <li><em>VAH (Value Area High) & VAL (Value Area Low):</em> Biên trên và biên dưới của vùng chấp nhận giá. Khu vực ngoài VA (31.8%) được xem là vùng từ chối giá (Rejection Area).</li>
+        </ul>
+        <p><strong>3. HVN (High Volume Node) vs LVN (Low Volume Node):</strong></p>
+        <ul>
+          <li><em>HVN (Vùng Khối Lượng Cao):</em> Đóng vai trò như <strong>nam châm hút giá</strong>. Giá khi đi vào HVN sẽ chậm lại, đi ngang và dao động cân bằng.</li>
+          <li><em>LVN (Vùng Khối Lượng Thấp):</em> Đóng vai trò như <strong>vùng từ chối hoặc bệ phóng</strong>. Thị trường không chấp nhận mức giá này, khiến giá hoặc bật ngược chữ V (V-turn), hoặc lao vụt qua với tốc độ cực nhanh (Impulsive Move).</li>
+        </ul>
+        <p><strong>4. Hình thái Profile chữ P và chữ b:</strong></p>
+        <ul>
+          <li><em>Mô hình Profile chữ P:</em> Thân trên phình to (HVN ở đỉnh), cán dưới hẹp (LVN ở chân). Thể hiện sự mất cân bằng tăng giá ban đầu, sau đó tích lũy giá trị mới ở vùng giá cao (thường là tái tích lũy hoặc phân phối đỉnh).</li>
+          <li><em>Mô hình Profile chữ b:</em> Cán trên hẹp (LVN ở đỉnh), thân dưới phình to (HVN ở đáy). Thể hiện sự mất cân bằng giảm giá ban đầu, sau đó gom hàng hoặc phân phối tiếp diễn ở vùng giá thấp.</li>
+        </ul>
+      </div>
+
+      <div class="box-action">
+        <h3>✅ Hành động áp dụng ngay (Action Steps)</h3>
+        <ul class="action-checklist">
+          <li class="action-item">
+            <input type="checkbox" id="act-3-1" class="chk-task">
+            <label class="action-text" for="act-3-1">
+              <strong>Kéo Profile dải cố định (Fixed Range):</strong> Kéo profile bao trùm toàn bộ phạm vi tích lũy từ điểm dừng Phase A đến ngay trước điểm bứt phá để xác định chính xác VPOC và VAH/VAL.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-3-2" class="chk-task">
+            <label class="action-text" for="act-3-2">
+              <strong>Dùng LVN làm lá chắn Stop Loss:</strong> Luôn đặt Stop Loss phía sau một Vùng Khối Lượng Thấp (LVN) vì xác suất giá bị từ chối và bật ngược tại LVN là cao nhất.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-3-3" class="chk-task">
+            <label class="action-text" for="act-3-3">
+              <strong>Chốt lời tại Naked VPOC:</strong> Đánh dấu các mức VPOC của các phiên trước chưa từng được giá chạm lại (Naked/Virgin VPOC) để làm mục tiêu Take Profit tự nhiên.
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="box-quote">
+        <p>“Volume Profile biến tính chủ quan của các đường hỗ trợ/kháng cự thành sự khách quan toán học: Biên trên và biên dưới của cấu trúc Wyckoff bản chất chính là các vùng Low Volume Node bị thị trường từ chối.”</p>
+        <div class="quote-author">— Rubén Villahermosa Chaves</div>
+      </div>
+
+      <div class="box-pitfall">
+        <h3>⚠️ Sai lầm & Cạm bẫy cần tránh (Pitfalls)</h3>
+        <p><strong>Giao dịch ngay sát cạnh VPOC:</strong> VPOC là điểm cân bằng hoàn hảo, nơi hai phe mua bán thỏa mãn mức giá. Giao dịch ngay tại VPOC rất dễ bị cuốn vào tình trạng rung lắc không rõ hướng (chop). Hãy kiên nhẫn chờ giá kiểm tra biên VAH/VAL hoặc bứt phá ra khỏi VPOC.</p>
+      </div>
+
+      <div class="accordion-wrap">
+        <div class="accordion-header">
+          <span class="accordion-title">📖 Ví dụ thực tế trong sách: Hiện tượng Di cư VPOC (VPOC Migration)</span>
+          <span class="accordion-icon">▼</span>
+        </div>
+        <div class="accordion-content">
+          <p><strong>VPOC Migration:</strong> Khi một xu hướng tăng lành mạnh diễn ra, VPOC của từng phiên liên tục dịch chuyển tịnh tiến lên cao hơn (Higher VPOCs), cho thấy dòng tiền chấp nhận mức giá cao mới. Nhưng nếu trong một phiên tăng, VPOC dịch chuyển lên đỉnh nhưng giá sau đó không thể bứt phá tiếp mà đi ngang quá lâu (tiêu tốn thời gian), đó là cảnh báo sớm của sự kiệt sức.</p>
+          <p>Nếu phiên hôm sau giá xuyên thủng xuống dưới VPOC đó, toàn bộ vùng tích lũy trên đỉnh lập tức biến thành vùng Phân Phối (Distribution) và kích hoạt lệnh Short đảo chiều.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- ==================== PHẦN 4: 4 NGUYÊN LÝ GIAO DỊCH ==================== -->
+    <article class="pillar-card" id="pillar-4">
+      <div class="pillar-header">
+        <div class="pillar-badge">4</div>
+        <div class="pillar-title-wrap">
+          <h2>4 Nguyên Lý Vận Hành Với Vùng Giá Trị (Value Areas)</h2>
+          <div class="sub">Giao dịch trong khung (Range Trading) · Đảo chiều (Reversion) · Tiếp diễn (Continuation) · Thất bại đảo chiều (Failed Reversion)</div>
+        </div>
+      </div>
+
+      <div class="box-takeaway">
+        <h3>💡 Ý tưởng cốt lõi (Core Concept)</h3>
+        <p>Bất kể bạn giao dịch khung thời gian nào, mối tương quan giữa Vị trí Giá hiện tại và Vùng Giá Trị (Value Area) chỉ có <strong>4 kịch bản vận hành duy nhất</strong>:</p>
+        <ul>
+          <li><strong>1. Nguyên lý Giao dịch trong Khung (Trading Range Principle):</strong> Giá mở cửa và vận động bên trong Vùng Giá Trị của phiên trước → Thị trường đang hoàn toàn cân bằng. Chiến lược: Mua ở biên dưới (VAL), Bán ở biên trên (VAH). Mục tiêu lợi nhuận tối thiểu là VPOC, tối đa là biên đối diện.</li>
+          <li><strong>2. Nguyên lý Đảo Chiều (Reversion Principle - Quy tắc 80%):</strong> Giá cố gắng bứt phá ra ngoài Value Area nhưng thất bại và quay trở lại bên trong. Theo thống kê của Market Profile, <em>khi giá thâm nhập trở lại và chấp nhận bên trong VA, có tới 80% xác suất giá sẽ đi xuyên suốt qua toàn bộ vùng giá trị để chạm tới biên đối diện</em>.</li>
+          <li><strong>3. Nguyên lý Tiếp Diễn (Continuation Principle):</strong> Giá mở cửa hoặc bứt phá ra khỏi Value Area, sau đó quay lại kiểm tra (Pullback Test) đúng biên ngoài (VAH hoặc VAL) và bị từ chối thâm nhập lại vào trong. Đây chính là điểm vào lệnh theo xu hướng (Tương ứng với điểm BUEC/JAC hoặc LPSY của Wyckoff).</li>
+          <li><strong>4. Nguyên lý Thất Bại Đảo Chiều (Failed Reversion Principle):</strong> Giá quay trở lại bên trong Value Area nhưng không thể vượt qua được trục trung tâm VPOC mà bị dội ngược trở ra. Kịch bản đảo chiều bị hủy bỏ, kích hoạt ngay lệnh đánh tiếp diễn xu hướng phá vỡ ban đầu.</li>
+        </ul>
+      </div>
+
+      <div class="box-action">
+        <h3>✅ Hành động áp dụng ngay (Action Steps)</h3>
+        <ul class="action-checklist">
+          <li class="action-item">
+            <input type="checkbox" id="act-4-1" class="chk-task">
+            <label class="action-text" for="act-4-1">
+              <strong>Kích hoạt Kịch bản 80% Rule:</strong> Khi giá giả vỡ biên trên (VAH) nhưng nến sau lập tức đóng cửa chui ngược lại vào trong VA, mở vị thế Bán ngắn hạn hướng về VAL.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-4-2" class="chk-task">
+            <label class="action-text" for="act-4-2">
+              <strong>Quản lý lệnh tại VPOC:</strong> Trong mọi giao dịch đảo chiều từ VAL lên VAH, luôn chủ động chốt lời 50% hoặc dời Stop Loss về Breakeven ngay khi giá chạm tới VPOC.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-4-3" class="chk-task">
+            <label class="action-text" for="act-4-3">
+              <strong>Tìm điểm hội tụ (Confluence):</strong> Chỉ vào lệnh Continuation khi biên VAH/VAL trùng khớp với đường VWAP tuần hoặc đường Creek của cấu trúc Wyckoff.
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="box-quote">
+        <p>“Sự khác biệt giữa một tay cờ bạc và một trader chuyên nghiệp là người chuyên nghiệp không bao giờ đuổi theo giá; họ xác định trước các vùng giá trị và kiên nhẫn chờ thị trường tự xác nhận sự chấp nhận hay từ chối.”</p>
+        <div class="quote-author">— Rubén Villahermosa Chaves</div>
+      </div>
+
+      <div class="box-pitfall">
+        <h3>⚠️ Sai lầm & Cạm bẫy cần tránh (Pitfalls)</h3>
+        <p><strong>Cố chấp giữ lệnh Reversion khi gặp cản VPOC:</strong> Nhiều trader kỳ vọng ăn trọn vẹn từ biên này sang biên kia (VAL sang VAH), nhưng khi giá chạm VPOC xuất hiện nỗ lực bán mạnh lại không chịu quản trị rủi ro, khiến lệnh thắng biến thành lệnh thua nặng nề khi xảy ra Failed Reversion.</p>
+      </div>
+
+      <div class="accordion-wrap">
+        <div class="accordion-header">
+          <span class="accordion-title">📖 Ví dụ thực tế trong sách: Giao dịch Tiếp Diễn trên cặp GBP/USD ($6B)</span>
+          <span class="accordion-icon">▼</span>
+        </div>
+        <div class="accordion-content">
+          <p><strong>Case GBP/USD ($6B Futures):</strong> Phiên giao dịch mở cửa bứt phá mạnh lên trên VAH của tuần trước. Thay vì fomo mua đuổi trên đỉnh, trader kiên nhẫn chờ nhịp hồi phục (Back Up) quay trở về kiểm định đúng vùng hội tụ: VAH tuần trước + Weekly VWAP + Đường Creek của khung tích lũy nhỏ.</p>
+          <p>Tại điểm chạm này, nến Footprint xuất hiện sự hấp thụ lực bán và bùng nổ lệnh Buy Market (Delta dương +793), kích hoạt lệnh mua chuẩn xác với tỷ lệ Risk:Reward lên tới hơn 1:4.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- ==================== PHẦN 5: QUY TRÌNH VẬN HÀNH TOÀN DIỆN ==================== -->
+    <article class="pillar-card" id="pillar-5">
+      <div class="pillar-header">
+        <div class="pillar-badge">5</div>
+        <div class="pillar-title-wrap">
+          <h2>Quy Trình Vận Hành Wyckoff 2.0 Toàn Diện</h2>
+          <div class="sub">Checklist 4 Bước: Bối cảnh · Vùng giao dịch · Kịch bản xác thực liên tục · Quản trị vị thế với Lệnh Stop Order</div>
+        </div>
+      </div>
+
+      <div class="box-takeaway">
+        <h3>💡 Ý tưởng cốt lõi (Core Concept)</h3>
+        <p>Wyckoff 2.0 hợp nhất toàn bộ các công cụ thành một <strong>Quy trình Vận hành 4 Bước nghiêm ngặt</strong>:</p>
+        <ul>
+          <li><strong>Bước 1: Phân tích Bối Cảnh (Context):</strong> Xác định thị trường đang trong Khung giá (Range) hay Xu hướng (Trend). Trả lời câu hỏi: <em>Ưu tiên Mua hay Bán?</em> (Định hướng thiên kiến).</li>
+          <li><strong>Bước 2: Xác định Vùng Vận Hành (Zones & Levels):</strong> Xác định chính xác <em>Ở ĐÂU</em> sẽ chờ đợi giá. Sử dụng điểm hội tụ giữa Wyckoff (Creek/Ice), Volume Profile (VAH, VAL, VPOC, HVN/LVN) và VWAP (phiên/tuần/tháng).</li>
+          <li><strong>Bước 3: Lập Kịch Bản Xác Thực Liên Tục (Scenario Planning):</strong> Chuẩn bị sẵn tư duy dạng mệnh đề <em>"Nếu X xảy ra, tôi sẽ làm Y"</em>. Không bao giờ dự đoán tương lai xa, chỉ lập kịch bản cho 1-2 bước sóng tiếp theo. Chuẩn bị đồng thời cả kịch bản chính và kịch bản phụ phòng khi thị trường bẻ lái.</li>
+          <li><strong>Bước 4: Quản Trị Vị Thế & Điểm Kích Hoạt (Position Management):</strong> 
+            <ul>
+              <li><em>Vào lệnh:</em> Bắt buộc sử dụng <strong>Lệnh Stop Order</strong> (Buy Stop phía trên đỉnh nến kích hoạt SOSbar, hoặc Sell Stop phía dưới đáy nến SOWbar) thay vì lệnh Limit. Lệnh Stop đóng vai trò như một bộ lọc xác nhận đà quán tính của thị trường.</li>
+              <li><em>Cắt lỗ (Stop Loss):</em> Đặt sau lưng các vùng LVN, VPOC hoặc đáy/đỉnh của cấu trúc rũ bỏ (Shakeout).</li>
+              <li><em>Chốt lời (Take Profit):</em> Đặt tại các vùng HVN đối diện, Naked VPOC hoặc đỉnh/đáy thanh khoản cũ.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <div class="box-action">
+        <h3>✅ Hành động áp dụng ngay (Action Steps)</h3>
+        <ul class="action-checklist">
+          <li class="action-item">
+            <input type="checkbox" id="act-5-1" class="chk-task">
+            <label class="action-text" for="act-5-1">
+              <strong>Tuyệt đối không dùng Lệnh Limit để "bắt dao":</strong> Chờ nến xác nhận tín hiệu (SOS/SOW bar) đóng cửa, sau đó đặt lệnh Buy Stop / Sell Stop cách 1 tick ngoài biên nến.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-5-2" class="chk-task">
+            <label class="action-text" for="act-5-2">
+              <strong>Thực hiện Phân Tích Đa Khung Thời Gian:</strong> Xác lập cấu trúc lớn ở khung D1/H4 → Xác định vùng giao dịch ở H1 → Tìm tín hiệu kích hoạt Footprint/Order Flow ở M5/M15.
+            </label>
+          </li>
+          <li class="action-item">
+            <input type="checkbox" id="act-5-3" class="chk-task">
+            <label class="action-text" for="act-5-3">
+              <strong>Tâm lý học khi "Tàu chạy mất" (Price goes without us):</strong> Nếu giá chạy mạnh mà không hồi về điểm kích hoạt, tuyệt đối không đuổi theo; ghi nhận phân tích đúng và kiên nhẫn chờ cấu trúc tái tích lũy tiếp theo.
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="box-quote">
+        <p>“Từ 'Kiểm soát' là từ nguy hiểm nhất trong trading. Bạn không thể kiểm soát giá cả hay hành vi của người khác. Bạn chỉ có thể kiểm soát duy nhất một thứ: phản hồi của chính bạn và tỷ lệ rủi ro/lợi nhuận trên mỗi giao dịch.”</p>
+        <div class="quote-author">— Rubén Villahermosa Chaves</div>
+      </div>
+
+      <div class="box-pitfall">
+        <h3>⚠️ Sai lầm & Cạm bẫy cần tránh (Pitfalls)</h3>
+        <p><strong>Cố đấm ăn xôi vào lệnh chỉ vì một tài sản duy nhất:</strong> Trader thường có xu hướng bám chặt vào một mã cổ phiếu hoặc cặp tiền duy nhất, dán nhãn chằng chịt trên khung 1 phút và cố ép thị trường phải tuân theo ý mình. Nếu bối cảnh không rõ ràng, giải pháp tối ưu nhất là <em>chuyển sang khung thời gian lớn hơn</em> hoặc <em>đổi sang tài sản khác có cấu trúc sáng sủa hơn</em>.</p>
+      </div>
+
+      <div class="accordion-wrap">
+        <div class="accordion-header">
+          <span class="accordion-title">📖 Ví dụ thực tế trong sách: Xử lý Thất Bại Đảo Chiều trên Hợp đồng Tương lai EUR/USD ($6E)</span>
+          <span class="accordion-icon">▼</span>
+        </div>
+        <div class="accordion-content">
+          <p><strong>Case EUR/USD ($6E - 31/08/2020):</strong> Giá mở cửa vượt lên trên VAH của phiên trước rồi rơi ngược trở lại, gợi ý kịch bản Bán đảo chiều theo quy tắc 80%. Tuy nhiên, khi giá vừa rơi đến vùng hỗ trợ VAL và Weekly VWAP, phe bán hoàn toàn biến mất.</p>
+          <p>Trên Footprint xuất hiện sự hấp thụ lệnh bán và ngay sau đó là cây nến tăng có Delta cực lớn (+427). Trader kỷ luật lập tức nhận diện đây là <em>Nguyên lý Thất bại đảo chiều (Failed Reversion)</em>, chủ động đóng ngay lệnh Short ở mức hòa vốn (Breakeven) và xoay chiều mở lệnh Long, bắt trọn con sóng tăng phi mã sau đó.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- ==================== MATRIX SUMMARY SECTION ==================== -->
+    <section class="matrix-section">
+      <div class="matrix-title">
+        <span>⚡</span>
+        <span>Ma Trận Tổng Kết Hệ Thống Wyckoff 2.0 (Key Takeaways Matrix)</span>
+      </div>
+      <p style="color: var(--text-soft); font-size: 0.95rem; margin-bottom: 12px;">
+        Bảng đối chiếu vai trò và ứng dụng thực chiến của 3 trụ cột phân tích trong từng giai đoạn ra quyết định:
+      </p>
+
+      <div class="table-container">
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th>Giai đoạn</th>
+              <th>Phương pháp Wyckoff</th>
+              <th>Volume Profile</th>
+              <th>Order Flow (Footprint)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1. Bối cảnh (Context)</strong></td>
+              <td>Xác định chu kỳ (Tích lũy, Phân phối, Xu hướng Phase E)</td>
+              <td>Xác định trạng thái Cân bằng (Range) hay Mất cân bằng (Trend) qua Vùng Giá Trị (VA)</td>
+              <td>Đóng vai trò thứ yếu (không dùng Order Flow để đoán bối cảnh lớn)</td>
+            </tr>
+            <tr>
+              <td><strong>2. Vị trí (Location)</strong></td>
+              <td>Xác định Creek (Kháng cự) và Ice (Hỗ trợ), vùng rũ bỏ Shakeout</td>
+              <td>Đo lường chính xác các mức giá cụ thể: VAH, VAL, VPOC, HVN và LVN</td>
+              <td>Xác định các vùng mất cân bằng chưa được kiểm tra (Unfinished Auctions)</td>
+            </tr>
+            <tr>
+              <td><strong>3. Kích hoạt (Trigger)</strong></td>
+              <td>Tìm kiếm các cây nến có chủ đích lớn: SOSbar hoặc SOWbar</td>
+              <td>Kiểm tra phản ứng tại biên Value Area (Chấp nhận hay Từ chối)</td>
+              <td>Soi bên trong cây nến: Hấp thụ (Absorption), Xoay chiều Delta & Lệnh chủ động (Initiative)</td>
+            </tr>
+            <tr>
+              <td><strong>4. Quản trị (Management)</strong></td>
+              <td>Đặt Stop Loss ngoài biên cấu trúc Spring/UTAD hoặc SOSbar</td>
+              <td>Đặt Stop Loss sau vùng LVN; Đặt Take Profit tại các mức Naked VPOC / HVN đối diện</td>
+              <td>Nhận biết sớm tín hiệu suy kiệt để dời Stop Loss về Breakeven hoặc chốt lời sớm</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© Tóm tắt phân tích chuyên sâu tác phẩm <strong>Wyckoff 2.0: Structures, Volume Profile and Order Flow</strong> — Rubén Villahermosa Chaves.</p>
+    <p style="margin-top: 6px; font-size: 0.8rem;">Thiết kế giao diện Front-end chuyên biệt cho Nhà đầu tư & Trader chuyên nghiệp.</p>
+  </footer>
+
+  <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Reading Progress Bar
+      const progressBar = document.getElementById('progress-bar');
+      window.addEventListener('scroll', () => {
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+        progressBar.style.width = progress + '%';
+      });
+
+      // 2. Dark / Light Mode Toggle
+      const themeToggleBtn = document.getElementById('theme-toggle');
+      const themeIcon = document.getElementById('theme-icon');
+      const themeText = document.getElementById('theme-text');
+      const htmlEl = document.documentElement;
+
+      const savedTheme = localStorage.getItem('wyckoff_theme') || 'dark';
+      setTheme(savedTheme);
+
+      themeToggleBtn.addEventListener('click', () => {
+        const currentTheme = htmlEl.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        setTheme(newTheme);
+      });
+
+      function setTheme(theme) {
+        htmlEl.setAttribute('data-theme', theme);
+        localStorage.setItem('wyckoff_theme', theme);
+        if (theme === 'light') {
+          themeIcon.textContent = '🌙';
+          themeText.textContent = 'Chế độ tối';
+        } else {
+          themeIcon.textContent = '☀️';
+          themeText.textContent = 'Chế độ sáng';
+        }
+      }
+
+      // 3. Action Checkboxes with LocalStorage & Progress Counter
+      const checkboxes = document.querySelectorAll('.chk-task');
+      const taskCounter = document.getElementById('task-counter');
+      const totalTasks = checkboxes.length;
+
+      // Load saved state
+      const savedTasks = JSON.parse(localStorage.getItem('wyckoff_tasks') || '[]');
+      savedTasks.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.checked = true;
+      });
+      updateCounter();
+
+      checkboxes.forEach(chk => {
+        chk.addEventListener('change', () => {
+          const completedIds = Array.from(checkboxes)
+            .filter(c => c.checked)
+            .map(c => c.id);
+          localStorage.setItem('wyckoff_tasks', JSON.stringify(completedIds));
+          updateCounter();
+        });
+      });
+
+      function updateCounter() {
+        const completedCount = document.querySelectorAll('.chk-task:checked').length;
+        taskCounter.textContent = `Đã hoàn thành: ${completedCount}/${totalTasks} bài tập`;
+        if (completedCount === totalTasks) {
+          taskCounter.style.color = 'var(--accent-gold)';
+          taskCounter.textContent = `🎉 Hoàn thành xuất sắc ${totalTasks}/${totalTasks} bài tập!`;
+        } else {
+          taskCounter.style.color = 'var(--accent-green)';
+        }
+      }
+
+      // 4. Accordion Toggle
+      const accordions = document.querySelectorAll('.accordion-wrap');
+      accordions.forEach(acc => {
+        const header = acc.querySelector('.accordion-header');
+        header.addEventListener('click', () => {
+          acc.classList.toggle('active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

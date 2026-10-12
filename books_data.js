@@ -98,4 +98,11 @@ const BOOKS_DATA = [
     "author": "Chuyên gia / Tác giả",
     "dateAdded": "Gần đây"
   },
+  {
+    "title": "Angular vietnam",
+    "filename": "https://buiminh15.github.io/angular_vietnam/",
+    "category": "Tech",
+    "author": "Chuyên gia / Tác giả",
+    "dateAdded": "Gần đây"
+  },
 ];

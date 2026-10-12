@@ -105,4 +105,11 @@ const BOOKS_DATA = [
     "author": "Chuyên gia / Tác giả",
     "dateAdded": "Gần đây"
   },
+  {
+    "title": "Angular Ninja",
+    "filename": "https://buiminh15.github.io/ninja-angular/",
+    "category": "Tech",
+    "author": "Chuyên gia / Tác giả",
+    "dateAdded": "Gần đây"
+  },
 ];

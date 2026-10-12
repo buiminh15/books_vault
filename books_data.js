@@ -83,4 +83,19 @@ const BOOKS_DATA = [
     "author": "Chuyên gia / Tác giả",
     "dateAdded": "Gần đây"
   },
+  {
+    "title": "Điện/ lạnh",
+    "filename": "https://buiminh15.github.io/DIEN_LANH/#/tu-lanh/0",
+    "category": "Điện - lạnh",
+    "author": "Chuyên gia / Tác giả",
+    "dateAdded": "Gần đây"
+  },
+
+  {
+    "title": "React native optimization callstacks",
+    "filename": "https://buiminh15.github.io/RN_optimaztion_callstacks/",
+    "category": "Tech",
+    "author": "Chuyên gia / Tác giả",
+    "dateAdded": "Gần đây"
+  },
 ];
